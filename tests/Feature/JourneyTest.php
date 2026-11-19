@@ -38,12 +38,18 @@ class JourneyTest extends TestCase
 
         $ids = array_column($json['stations'], 'node_id');
         $this->assertNotContains('fixture-13-frodsham', $ids, 'temporarily closed station must be excluded');
-        $this->assertNotContains('fixture-14-altrincham', $ids, '40-day-old price must be excluded');
         $this->assertNotContains('fixture-08-rhyl', $ids, 'Rhyl is outside the 2 mile corridor');
         $this->assertNotContains('fixture-16-wythenshawe', $ids, 'no E10 price');
         $this->assertContains('fixture-07-abergele', $ids, 'swapped coordinates were repaired so it is found');
         $this->assertSame(1, $json['excluded']['temporarily_closed']);
-        $this->assertSame(1, $json['excluded']['price_too_old']);
+
+        // A price unchanged for 40 days is probably just stable: shown, but flagged.
+        $altrincham = collect($json['stations'])->firstWhere('node_id', 'fixture-14-altrincham');
+        $this->assertNotNull($altrincham, '40-day-unchanged price is shown, not hidden');
+        $this->assertTrue($altrincham['price_is_doubtful']);
+        $this->assertEqualsWithDelta(40 * 24, $altrincham['price_unchanged_hours'], 24);
+        $fresh = collect($json['stations'])->firstWhere('node_id', 'fixture-01-holyhead');
+        $this->assertFalse($fresh['price_is_doubtful']);
 
         // Ranked by total cost, exactly one "convenient" baseline.
         $totals = array_column($json['stations'], 'total_cost_gbp');

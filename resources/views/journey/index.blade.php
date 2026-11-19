@@ -132,12 +132,17 @@
                             </td>
                             <td class="num">
                                 {{ number_format($s['price_ppl'], 1) }}p<br>
-                                <span class="muted {{ $s['price_is_old'] ? 'neg' : '' }}">
-                                    @if ($s['price_age_hours'] === null) age unknown
-                                    @elseif ($s['price_age_hours'] < 1) &lt;1h old
-                                    @elseif ($s['price_age_hours'] < 48) {{ (int) $s['price_age_hours'] }}h old
-                                    @else {{ (int) ($s['price_age_hours'] / 24) }}d old
+                                @php($h = $s['price_unchanged_hours'])
+                                <span class="muted {{ $s['price_is_doubtful'] ? 'neg' : '' }}"
+                                      title="{{ $h === null
+                                          ? 'The source gave no date for this price.'
+                                          : 'Last changed '.\Carbon\Carbon::parse($s['price_last_changed_at'])->timezone('Europe/London')->format('j M Y, H:i').'. This is when the price last changed, not when it was last checked: retailers must report changes within 30 minutes, so an older date usually means a stable price.'.($s['price_is_doubtful'] ? ' It has not changed for an unusually long time, so it may be out of date.' : '') }}">
+                                    @if ($h === null) date unknown
+                                    @elseif ($h < 1) changed &lt;1h ago
+                                    @elseif ($h < 48) unchanged {{ (int) $h }}h
+                                    @else unchanged {{ (int) ($h / 24) }} days
                                     @endif
+                                    @if ($s['price_is_doubtful'] && $h !== null) &#9888;@endif
                                 </span>
                             </td>
                             <td class="num">{{ $s['miles_into_journey'] }}</td>

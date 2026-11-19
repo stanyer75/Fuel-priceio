@@ -75,10 +75,10 @@ class CheckFuelPricesTest extends TestCase
         $json = $this->search()->assertOk()->json();
 
         $this->assertNotContains('cfp:stale', array_column($json['stations'], 'node_id'));
-        $this->assertGreaterThanOrEqual(1, $json['excluded']['price_too_old']);
+        $this->assertGreaterThanOrEqual(1, $json['excluded']['price_from_closed_scheme']);
 
         $llangefni = collect($json['stations'])->firstWhere('node_id', 'cfp:llangefni');
-        $this->assertEqualsWithDelta(30, $llangefni['price_age_hours'], 0.2, 'dd/mm/yyyy UK local time parsed correctly');
+        $this->assertEqualsWithDelta(30, $llangefni['price_unchanged_hours'], 0.2, 'dd/mm/yyyy UK local time parsed correctly');
         $this->assertSame('Texaco', $llangefni['name']);
     }
 

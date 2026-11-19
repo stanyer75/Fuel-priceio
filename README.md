@@ -61,7 +61,7 @@ php artisan schedule:work    # keeps it fresh (stations hourly, prices every 15 
 ### Tests
 
 ```bash
-php artisan test             # 97 tests, ~2 seconds, fully offline
+php artisan test             # 99 tests, ~2 seconds, fully offline
 ```
 
 Every HTTP call is faked (`Http::preventStrayRequests()`), so tests never touch real APIs or quotas. The fakes behave like the real services as probed (distance-sorted and capped at 20; 302 for bad parameters; 406 without the geo+json `Accept` header). `phpunit.xml` pins the sources so a reviewer's `.env` can't leak in.
@@ -126,7 +126,8 @@ This is compared against the *convenient* station (the one needing the least det
 | Out-of-range parameters return a **302 redirect**, not a 400 | Redirects are disabled; any 3xx becomes a `request_rejected` error naming the parameters. Following it would have returned an HTML page with a 200 |
 | **Undocumented response** (the provider's REST API is "coming soon"; this endpoint powers its widget) | Strict shape validation: `success`, `stations` list, required fields. A drift or a Cloudflare HTML page fails loudly as `unexpected_response` |
 | **Two timestamp formats in one response**: `2026-11-18T23:05:15.000Z` and `18/11/2026 10:43:27` | Day-first parsed explicitly (a generic, US-order parser reads `05/11/2026` as 11 May, not 5 November) in **UK local time** (BST in summer), then converted to UTC |
-| Leftover prices from the closed CMA scheme (e.g. dated 29/04/2026) | Excluded by the 14-day age rule and counted (14 on the first live Holyhead → Manchester run) |
+| **What does the price timestamp mean?** Not documented. In Fuel Finder (the upstream feed) it's when the price last **changed**, not when it was last confirmed, and retailers must report changes within 30 min. So "5 days old" usually means "stable for 5 days", not "stale". An early version labelled these "5d old" in red, which suggested they were unreliable | Labelled **"unchanged 5 days"**, with a tooltip giving the exact time and this explanation. Only flagged ⚠ after 14 days unchanged; hidden after 60. The JSON says the same: `price_last_changed_at`, `price_unchanged_hours`, `price_is_doubtful` |
+| Leftover prices from the closed CMA scheme (e.g. dated 29/04/2026) | Anything last changed before 1 May 2026 is always hidden as `price_from_closed_scheme`. Live: 10 of the 13 prices hidden on Holyhead → Manchester were these leftovers |
 | Inconsistent names (`TESCO`, `Jet`, `ASDA LLANDUDNO SUPERSTORE`), no motorway/closure flags | Display-cased; missing flags default to "unknown/false" |
 | Some circles fail | Partial results plus a warning saying how much of the route is missing; only a total failure is an error |
 | Attribution required by the provider's terms | "Prices from checkfuelprices.co.uk" shown with every result and returned in the JSON |
@@ -172,7 +173,7 @@ This is compared against the *convenient* station (the one needing the least det
 ### Freshness & edge cases
 | Seam | Handling |
 |---|---|
-| Retailers have 30 min to report, and we sync every 15 min, so a price can be ~45 min behind the pump | Each price shows its age; >48h is flagged; >14 days is excluded (and counted) |
+| Retailers have 30 min to report, and prices are cached (30 min live; 15 min sync for the synced source), so a price can be up to about an hour behind the pump | Each price shows how long it has been unchanged; >14 days is flagged, >60 days or pre-May-2026 is hidden (and counted). All thresholds are in config |
 | An overlapping or late incremental window delivers an **older** price | Never overwrites a newer stored price |
 | A failed sync | Recorded with its error; previously synced data is kept; the next run resumes from the last *good* run |
 | Straight-line distance ≠ road distance (a station 200 m away may be across a dual carriageway) | The corridor only *shortlists* stations; real detours come from the ORS road matrix. In the first live run, a station 0.14 mi from the A55 was an **8.2 mi** detour |

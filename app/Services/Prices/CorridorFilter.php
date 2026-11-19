@@ -10,7 +10,11 @@ use Carbon\CarbonImmutable;
  *  - within N miles (straight line) of the route - a SHORTLIST only; real
  *    detours come from the routing matrix;
  *  - not temporarily closed;
- *  - price not older than the configured maximum age.
+ *  - price not a leftover from before the statutory scheme (CMA closure);
+ *  - price not unchanged for longer than the maximum age.
+ *
+ * price_updated_at is when the price last CHANGED, so "old" mostly means
+ * "stable"; see the price_* settings in config/fueldetour.php.
  *
  * Normalised station shape:
  *   node_id, name, brand, address, postcode, lat, lon, is_motorway_services,
@@ -28,7 +32,8 @@ class CorridorFilter
     {
         $corridorMetres = Geo::milesToMetres($corridorMiles);
         $oldest = CarbonImmutable::now()->subDays((int) config('fueldetour.journey.price_max_age_days'));
-        $excluded = ['temporarily_closed' => 0, 'price_too_old' => 0];
+        $notBefore = CarbonImmutable::parse(config('fueldetour.journey.price_not_before'), 'UTC');
+        $excluded = ['temporarily_closed' => 0, 'price_from_closed_scheme' => 0, 'price_unchanged_too_long' => 0];
         $candidates = [];
 
         foreach ($stations as $station) {
@@ -43,8 +48,18 @@ class CorridorFilter
                 continue;
             }
 
-            if ($station['price_updated_at'] && $station['price_updated_at']->lt($oldest)) {
-                $excluded['price_too_old']++;
+            $changedAt = $station['price_updated_at'];
+
+            // Abandoned: last touched under the old CMA scheme, e.g. 29/04/2026.
+            if ($changedAt && $changedAt->lt($notBefore)) {
+                $excluded['price_from_closed_scheme']++;
+
+                continue;
+            }
+
+            // Plausible but implausibly long without a single change.
+            if ($changedAt && $changedAt->lt($oldest)) {
+                $excluded['price_unchanged_too_long']++;
 
                 continue;
             }

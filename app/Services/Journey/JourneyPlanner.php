@@ -95,6 +95,7 @@ class JourneyPlanner
                     'Detour = extra road distance vs. driving straight from start to destination.',
                     'Detour fuel is costed at that station\'s price; time is not given a cash value.',
                     'MPG is UK (imperial): 4.54609 litres per gallon.',
+                    'Price ages show how long since the price last changed. Retailers must report changes within 30 minutes, so an older date usually means a stable price.',
                 ],
             ],
             'recommendation' => $recommendation,
@@ -209,12 +210,13 @@ class JourneyPlanner
         $convenient = $convenient[0];
 
         $baselineCost = $calc->totalCost($convenient['price_ppl'], Geo::metresToMiles($convenient['detour_m']));
-        $oldAfterHours = (int) config('fueldetour.journey.price_old_after_hours');
+        $doubtfulAfterHours = 24 * (int) config('fueldetour.journey.price_doubtful_after_days');
 
-        $rows = array_map(function ($s) use ($calc, $baselineCost, $convenient, $oldAfterHours) {
+        $rows = array_map(function ($s) use ($calc, $baselineCost, $convenient, $doubtfulAfterHours) {
             $detourMiles = Geo::metresToMiles($s['detour_m']);
             $total = $calc->totalCost($s['price_ppl'], $detourMiles);
-            $ageHours = $s['price_updated_at'] ? $s['price_updated_at']->diffInMinutes(now()) / 60 : null;
+            // Time since the price last CHANGED (not since it was last confirmed).
+            $unchangedHours = $s['price_updated_at'] ? $s['price_updated_at']->diffInMinutes(now()) / 60 : null;
 
             return [
                 'node_id' => $s['node_id'],
@@ -227,9 +229,10 @@ class JourneyPlanner
                 'is_motorway_services' => $s['is_motorway_services'],
                 'is_supermarket' => $s['is_supermarket'],
                 'price_ppl' => $s['price_ppl'],
-                'price_updated_at' => $s['price_updated_at']?->toIso8601String(),
-                'price_age_hours' => $ageHours === null ? null : round($ageHours, 1),
-                'price_is_old' => $ageHours === null || $ageHours > $oldAfterHours,
+                'price_last_changed_at' => $s['price_updated_at']?->toIso8601String(),
+                'price_unchanged_hours' => $unchangedHours === null ? null : round($unchangedHours, 1),
+                // Unknown age, or unchanged for so long it may no longer be true.
+                'price_is_doubtful' => $unchangedHours === null || $unchangedHours > $doubtfulAfterHours,
                 'miles_from_route' => round(Geo::metresToMiles($s['distance_from_route_m']), 2),
                 'miles_into_journey' => round(Geo::metresToMiles($s['along_route_m']), 1),
                 'detour_miles' => round($detourMiles, 2),

@@ -165,10 +165,20 @@ return [
         // Longest journey we will search, to bound the bounding-box query.
         'max_route_miles' => 450,
 
-        // Prices are shown with their age; older than this are flagged...
-        'price_old_after_hours' => 48,
-        // ...and older than this are excluded from results entirely.
-        'price_max_age_days' => 14,
+        // Price timestamps record when a price last CHANGED, not when it was
+        // last confirmed (Fuel Finder's definition; CheckFuelPrices is built
+        // on that feed but doesn't document it). Retailers must report every
+        // change within 30 minutes, so an old timestamp usually means a
+        // STABLE price, not a stale one. Hence:
+        //
+        // Unchanged for longer than this: shown, but flagged as doubtful...
+        'price_doubtful_after_days' => 14,
+        // ...unchanged for longer than this: excluded (counted in "Left out").
+        'price_max_age_days' => 60,
+        // Anything last changed before this date predates the statutory
+        // scheme taking over (the CMA interim scheme closed on 1 May 2026):
+        // an abandoned leftover, always excluded.
+        'price_not_before' => '2026-05-01',
 
         // A detour must save at least this much (GBP) to be recommended.
         'min_worthwhile_saving_gbp' => 0.50,
