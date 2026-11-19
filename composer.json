@@ -1,9 +1,9 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "fuel-detour/fuel-detour",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "description": "Cheapest fuel along a UK route, and whether a detour is worth it: pairs live UK fuel prices (CheckFuelPrices / Fuel Finder) with openrouteservice routing.",
+    "keywords": ["laravel", "fuel-prices", "openrouteservice", "api-integration"],
     "license": "MIT",
     "require": {
         "php": "^8.3",
