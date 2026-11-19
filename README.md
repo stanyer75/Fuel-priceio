@@ -1,5 +1,7 @@
 # Fuel Detour
 
+*Repository: [github.com/stanyer75/Fuel-priceio](https://github.com/stanyer75/Fuel-priceio)*
+
 **You fill up, drive two minutes down the road, and see fuel 8p a litre cheaper.**
 Fuel Detour takes a start and a destination anywhere in the UK (e.g. *Holyhead → Manchester*), finds the cheapest petrol or diesel near the route, and tells you whether a detour is actually worth it once the extra miles are paid for.
 
@@ -37,8 +39,8 @@ No Node, no database server, no Docker.
 ### 2. Get the code and install
 
 ```bash
-git clone https://github.com/<your-username>/fuel-detour.git
-cd fuel-detour
+git clone https://github.com/stanyer75/Fuel-priceio.git
+cd Fuel-priceio
 composer setup
 ```
 

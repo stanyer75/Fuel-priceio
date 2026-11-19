@@ -4,6 +4,7 @@
     "type": "project",
     "description": "Cheapest fuel along a UK route, and whether a detour is worth it: pairs live UK fuel prices (CheckFuelPrices / Fuel Finder) with openrouteservice routing.",
     "keywords": ["laravel", "fuel-prices", "openrouteservice", "api-integration"],
+    "homepage": "https://github.com/stanyer75/Fuel-priceio",
     "license": "MIT",
     "require": {
         "php": "^8.3",
