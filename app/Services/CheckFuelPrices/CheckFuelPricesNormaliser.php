@@ -60,8 +60,10 @@ class CheckFuelPricesNormaliser
         }
 
         $corrections = array_values(array_filter([$coordinateFix, ...$price->corrections]));
-        $brand = $this->base->displayCase(is_string($raw['brand'] ?? null) ? trim($raw['brand']) : null);
-        $address = $this->base->displayCase(is_string($raw['address'] ?? null) ? trim($raw['address']) : null);
+        // Collapse runs of whitespace: live data has e.g. "ASDA NEWPORT PILLGWENLLY  SUPERSTORE".
+        $clean = fn ($v) => is_string($v) && trim($v) !== '' ? preg_replace('/\s+/', ' ', trim($v)) : null;
+        $brand = $this->base->displayCase($clean($raw['brand'] ?? null));
+        $address = $this->base->displayCase($clean($raw['address'] ?? null));
 
         return NormalisedRecord::accept([
             'node_id' => $nodeId,

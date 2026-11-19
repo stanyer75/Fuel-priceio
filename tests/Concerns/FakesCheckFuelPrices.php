@@ -32,7 +32,7 @@ trait FakesCheckFuelPrices
         $pool = [
             $row('holyhead', 'ESSO', 53.3065, -4.6280, 157.9, $iso(3)),
             $row('llangefni', 'TEXACO', 53.2520, -4.3050, 148.9, $uk(30)),          // UK day-first timestamp
-            $row('bangor', 'ASDA BANGOR SUPERSTORE', 53.2240, -4.1020, 151.7, $iso(5)),
+            $row('bangor', 'ASDA BANGOR  SUPERSTORE', 53.2240, -4.1020, 151.7, $iso(5)), // double space, as seen live
             $row('stale', 'TESCO', 53.2840, -3.8110, 129.9, '29/04/2026 11:18:22'), // leftover CMA price
             $row('abergele', 'SHELL', 53.2860, -3.5810, 163.9, $iso(12)),
             $row('ewloe', 'JET', 53.1985, -3.0610, 154.9, $iso(2)),

@@ -80,6 +80,7 @@ class CheckFuelPricesTest extends TestCase
         $llangefni = collect($json['stations'])->firstWhere('node_id', 'cfp:llangefni');
         $this->assertEqualsWithDelta(30, $llangefni['price_unchanged_hours'], 0.2, 'dd/mm/yyyy UK local time parsed correctly');
         $this->assertSame('Texaco', $llangefni['name']);
+        $this->assertSame('Asda Bangor Superstore', collect($json['stations'])->firstWhere('node_id', 'cfp:bangor')['name'], 'whitespace collapsed');
     }
 
     public function test_redirect_for_bad_parameters_is_not_followed_and_is_reported(): void
