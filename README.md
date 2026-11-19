@@ -21,8 +21,12 @@ The interesting part is the **seams** between them; they're listed [below](#the-
 
 ```bash
 git clone <this repo> fuel-detour && cd fuel-detour
-composer setup          # install, .env, SQLite database, migrations, load sample data
+composer setup          # checks requirements, installs, .env, SQLite database, migrations, sample data
 ```
+
+`composer setup` first runs [scripts/check-requirements.php](scripts/check-requirements.php). If your PHP is missing something, it stops before installing anything and tells you exactly what to change (on Windows, which `php.ini` line). Run it on its own with `php scripts/check-requirements.php`.
+
+**Tested from scratch** by following these steps on clean systems: Debian 13 with PHP 8.3 (the minimum), Alpine 3.24 with PHP 8.5, and Windows 11 with PHP 8.5 (including a fresh-install `php.ini` and a folder path with spaces). Setup takes under 10 seconds after downloads, and the test suite also passes with networking switched off.
 
 Then add a **free openrouteservice key** (sign up at <https://openrouteservice.org/dev/#/signup>, about 2 minutes) to `.env`. It's the only credential needed; live UK prices need no key:
 
