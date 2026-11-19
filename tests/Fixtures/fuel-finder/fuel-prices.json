@@ -1,0 +1,330 @@
+[
+    {
+        "node_id": "fixture-01-holyhead",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS HOLYHEAD",
+        "fuel_prices": [
+            {
+                "price": "0147.9000",
+                "fuel_type": "E10",
+                "price_last_updated": "2026-11-18T07:00:00"
+            },
+            {
+                "price": "0153.9000",
+                "fuel_type": "B7_STANDARD",
+                "price_last_updated": "2026-11-18T07:00:00"
+            }
+        ]
+    },
+    {
+        "node_id": "fixture-02-valley",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS VALLEY JUNCTION",
+        "fuel_prices": [
+            {
+                "price": "0144.9000",
+                "fuel_type": "E10",
+                "price_last_updated": "2026-11-18T06:30:00"
+            },
+            {
+                "price": "0151.9000",
+                "fuel_type": "B7_STANDARD",
+                "price_last_updated": "2026-11-18T06:30:00"
+            }
+        ]
+    },
+    {
+        "node_id": "fixture-03-llangefni",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS LLANGEFNI",
+        "fuel_prices": [
+            {
+                "price": "0139.9000",
+                "fuel_type": "E10",
+                "price_last_updated": "2026-11-18T06:00:00"
+            },
+            {
+                "price": "0147.9000",
+                "fuel_type": "B7_STANDARD",
+                "price_last_updated": "2026-11-18T06:00:00"
+            }
+        ]
+    },
+    {
+        "node_id": "fixture-04-bangor",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS LLANDEGAI",
+        "fuel_prices": [
+            {
+                "price": "0142.9000",
+                "fuel_type": "E10",
+                "price_last_updated": "2026-11-18T05:30:00"
+            },
+            {
+                "price": "0149.9000",
+                "fuel_type": "B7_STANDARD",
+                "price_last_updated": "2026-11-18T05:30:00"
+            }
+        ]
+    },
+    {
+        "node_id": "fixture-05-llandudno-junction",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS LLANDUDNO JUNCTION",
+        "fuel_prices": [
+            {
+                "price": "1.419",
+                "fuel_type": "E10",
+                "price_last_updated": "2026-11-18T05:00:00"
+            },
+            {
+                "price": "0148.9000",
+                "fuel_type": "B7_STANDARD",
+                "price_last_updated": "2026-11-18T05:00:00"
+            }
+        ]
+    },
+    {
+        "node_id": "fixture-06-llandudno",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS LLANDUDNO",
+        "fuel_prices": [
+            {
+                "price": "0133.9000",
+                "fuel_type": "E10",
+                "price_last_updated": "2026-11-18T04:30:00"
+            },
+            {
+                "price": "0141.9000",
+                "fuel_type": "B7_STANDARD",
+                "price_last_updated": "2026-11-18T04:30:00"
+            }
+        ]
+    },
+    {
+        "node_id": "fixture-07-abergele",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS ABERGELE",
+        "fuel_prices": [
+            {
+                "price": "0138.9000",
+                "fuel_type": "E10",
+                "price_last_updated": "2026-11-18T04:00:00"
+            },
+            {
+                "price": "0146.9000",
+                "fuel_type": "B7_STANDARD",
+                "price_last_updated": "2026-11-18T04:00:00"
+            }
+        ]
+    },
+    {
+        "node_id": "fixture-08-rhyl",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS RHYL",
+        "fuel_prices": [
+            {
+                "price": "0129.9000",
+                "fuel_type": "E10",
+                "price_last_updated": "2026-11-18T03:30:00"
+            },
+            {
+                "price": "0137.9000",
+                "fuel_type": "B7_STANDARD",
+                "price_last_updated": "2026-11-18T03:30:00"
+            }
+        ]
+    },
+    {
+        "node_id": "fixture-09-st-asaph",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS ST ASAPH",
+        "fuel_prices": [
+            {
+                "price": "0140.9000",
+                "fuel_type": "E10",
+                "price_last_updated": "2026-11-18T03:00:00"
+            },
+            {
+                "price": "0147.9000",
+                "fuel_type": "B7_STANDARD",
+                "price_last_updated": "2026-11-18T03:00:00"
+            }
+        ]
+    },
+    {
+        "node_id": "fixture-10-northop",
+        "public_phone_number": null,
+        "trading_name": "DEMO SERVICES NORTHOP",
+        "fuel_prices": [
+            {
+                "price": "0158.9000",
+                "fuel_type": "E10",
+                "price_last_updated": "2026-11-18T02:30:00"
+            },
+            {
+                "price": "0164.9000",
+                "fuel_type": "B7_STANDARD",
+                "price_last_updated": "2026-11-18T02:30:00"
+            }
+        ]
+    },
+    {
+        "node_id": "fixture-11-ewloe",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS EWLOE",
+        "fuel_prices": [
+            {
+                "price": "0136.9000",
+                "fuel_type": "E10",
+                "price_last_updated": "2026-11-18T02:00:00"
+            },
+            {
+                "price": "0144.9000",
+                "fuel_type": "B7_STANDARD",
+                "price_last_updated": "2026-11-18T02:00:00"
+            }
+        ]
+    },
+    {
+        "node_id": "fixture-12-chester",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS CHESTER",
+        "fuel_prices": [
+            {
+                "price": "0131.9000",
+                "fuel_type": "E10",
+                "price_last_updated": "2026-11-18T01:30:00"
+            },
+            {
+                "price": "0139.9000",
+                "fuel_type": "B7S",
+                "price_last_updated": "2026-11-18T01:30:00"
+            }
+        ]
+    },
+    {
+        "node_id": "fixture-13-frodsham",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS FRODSHAM",
+        "fuel_prices": [
+            {
+                "price": "0125.9000",
+                "fuel_type": "E10",
+                "price_last_updated": "2026-11-18T01:00:00"
+            },
+            {
+                "price": "0133.9000",
+                "fuel_type": "B7_STANDARD",
+                "price_last_updated": "2026-11-18T01:00:00"
+            }
+        ]
+    },
+    {
+        "node_id": "fixture-14-altrincham",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS ALTRINCHAM",
+        "fuel_prices": [
+            {
+                "price": "0127.9000",
+                "fuel_type": "E10",
+                "price_last_updated": "2026-10-09T07:00:00"
+            },
+            {
+                "price": "0135.9000",
+                "fuel_type": "B7_STANDARD",
+                "price_last_updated": "2026-10-09T07:00:00"
+            }
+        ]
+    },
+    {
+        "node_id": "fixture-15-manchester",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS RINGWAY",
+        "fuel_prices": [
+            {
+                "price": "0137.9000",
+                "fuel_type": "E10",
+                "price_last_updated": "2026-11-18T00:00:00"
+            },
+            {
+                "price": "0145.9000",
+                "fuel_type": "B7_STANDARD",
+                "price_last_updated": "2026-11-18T00:00:00"
+            },
+            {
+                "price": "0009.9900",
+                "fuel_type": "E5",
+                "price_last_updated": "2026-11-18T00:00:00"
+            }
+        ]
+    },
+    {
+        "node_id": "fixture-16-manchester",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS WYTHENSHAWE",
+        "fuel_prices": [
+            {
+                "price": null,
+                "fuel_type": "E10",
+                "price_last_updated": null
+            },
+            {
+                "price": "0144.9000",
+                "fuel_type": "B7_STANDARD",
+                "price_last_updated": "2026-11-17T23:30:00"
+            }
+        ]
+    },
+    {
+        "node_id": "fixture-17-manchester",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS MANCHESTER CENTRAL",
+        "fuel_prices": [
+            {
+                "price": "0135.9000",
+                "fuel_type": "E10",
+                "price_last_updated": "2026-11-17T23:00:00"
+            },
+            {
+                "price": "0143.9000",
+                "fuel_type": "B7_STANDARD",
+                "price_last_updated": "2026-11-17T23:00:00"
+            },
+            {
+                "price": "0099.9000",
+                "fuel_type": "LPG",
+                "price_last_updated": "2026-11-17T23:00:00"
+            }
+        ]
+    },
+    {
+        "node_id": "fixture-18-unknown",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS NOWHERE",
+        "fuel_prices": [
+            {
+                "price": "0130.0000",
+                "fuel_type": "E10",
+                "price_last_updated": "2026-11-17T22:30:00"
+            },
+            {
+                "price": "0140.0000",
+                "fuel_type": "B7_STANDARD",
+                "price_last_updated": "2026-11-17T22:30:00"
+            }
+        ]
+    },
+    {
+        "node_id": "fixture-99-orphan",
+        "public_phone_number": null,
+        "trading_name": "PRICE WITH NO STATION",
+        "fuel_prices": [
+            {
+                "price": "0120.0000",
+                "fuel_type": "E10",
+                "price_last_updated": "2026-11-18T07:00:00"
+            }
+        ]
+    }
+]

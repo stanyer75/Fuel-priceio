@@ -1,0 +1,1408 @@
+[
+    {
+        "node_id": "fixture-01-holyhead",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS HOLYHEAD",
+        "is_same_trading_and_brand_name": false,
+        "brand_name": "DEMO FUELS",
+        "temporary_closure": false,
+        "permanent_closure": false,
+        "permanent_closure_date": null,
+        "is_motorway_service_station": false,
+        "is_supermarket_service_station": false,
+        "location": {
+            "address_line_1": "1 FIXTURE ROAD",
+            "address_line_2": null,
+            "city": "HOLYHEAD",
+            "country": "Wales",
+            "county": null,
+            "postcode": "LL65 1DQ",
+            "latitude": "53.3065",
+            "longitude": "-4.628"
+        },
+        "amenities": [
+            "customer_toilets"
+        ],
+        "opening_times": {
+            "usual_days": {
+                "monday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "tuesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "wednesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "thursday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "friday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "saturday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "sunday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                }
+            },
+            "bank_holiday": {
+                "type": "standard",
+                "open_time": "06:00:00",
+                "close_time": "22:00:00",
+                "is_24_hours": false
+            }
+        },
+        "fuel_types": [
+            "E10",
+            "B7_STANDARD"
+        ]
+    },
+    {
+        "node_id": "fixture-02-valley",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS VALLEY JUNCTION",
+        "is_same_trading_and_brand_name": false,
+        "brand_name": "DEMO FUELS",
+        "temporary_closure": false,
+        "permanent_closure": false,
+        "permanent_closure_date": null,
+        "is_motorway_service_station": false,
+        "is_supermarket_service_station": false,
+        "location": {
+            "address_line_1": "1 FIXTURE ROAD",
+            "address_line_2": null,
+            "city": "VALLEY",
+            "country": "WALES",
+            "county": null,
+            "postcode": "ll653ex",
+            "latitude": "53.284",
+            "longitude": "-4.555"
+        },
+        "amenities": [
+            "customer_toilets"
+        ],
+        "opening_times": {
+            "usual_days": {
+                "monday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "tuesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "wednesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "thursday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "friday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "saturday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "sunday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                }
+            },
+            "bank_holiday": {
+                "type": "standard",
+                "open_time": "06:00:00",
+                "close_time": "22:00:00",
+                "is_24_hours": false
+            }
+        },
+        "fuel_types": [
+            "E10",
+            "B7_STANDARD"
+        ]
+    },
+    {
+        "node_id": "fixture-03-llangefni",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS LLANGEFNI",
+        "is_same_trading_and_brand_name": false,
+        "brand_name": "DEMO FUELS",
+        "temporary_closure": false,
+        "permanent_closure": null,
+        "permanent_closure_date": null,
+        "is_motorway_service_station": false,
+        "is_supermarket_service_station": false,
+        "location": {
+            "address_line_1": "1 FIXTURE ROAD",
+            "address_line_2": null,
+            "city": "LLANGEFNI",
+            "country": "Wales",
+            "county": null,
+            "postcode": "LL77 7JA",
+            "latitude": "53.256",
+            "longitude": "-4.31"
+        },
+        "amenities": [
+            "customer_toilets"
+        ],
+        "opening_times": {
+            "usual_days": {
+                "monday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "tuesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "wednesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "thursday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "friday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "saturday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "sunday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                }
+            },
+            "bank_holiday": {
+                "type": "standard",
+                "open_time": "06:00:00",
+                "close_time": "22:00:00",
+                "is_24_hours": false
+            }
+        },
+        "fuel_types": [
+            "E10",
+            "B7_STANDARD"
+        ]
+    },
+    {
+        "node_id": "fixture-04-bangor",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS LLANDEGAI",
+        "is_same_trading_and_brand_name": false,
+        "brand_name": "DEMO FUELS",
+        "temporary_closure": false,
+        "permanent_closure": false,
+        "permanent_closure_date": null,
+        "is_motorway_service_station": false,
+        "is_supermarket_service_station": false,
+        "location": {
+            "address_line_1": "1 FIXTURE ROAD",
+            "address_line_2": null,
+            "city": "BANGOR",
+            "country": "WALES",
+            "county": null,
+            "postcode": "LL57 4BG",
+            "latitude": "53.223",
+            "longitude": "-4.1"
+        },
+        "amenities": [
+            "customer_toilets"
+        ],
+        "opening_times": {
+            "usual_days": {
+                "monday": {
+                    "open": "00:00:00",
+                    "close": "00:00:00",
+                    "is_24_hours": false
+                },
+                "tuesday": {
+                    "open": "00:00:00",
+                    "close": "00:00:00",
+                    "is_24_hours": false
+                },
+                "wednesday": {
+                    "open": "00:00:00",
+                    "close": "00:00:00",
+                    "is_24_hours": false
+                },
+                "thursday": {
+                    "open": "00:00:00",
+                    "close": "00:00:00",
+                    "is_24_hours": false
+                },
+                "friday": {
+                    "open": "00:00:00",
+                    "close": "00:00:00",
+                    "is_24_hours": false
+                },
+                "saturday": {
+                    "open": "00:00:00",
+                    "close": "00:00:00",
+                    "is_24_hours": false
+                },
+                "sunday": {
+                    "open": "00:00:00",
+                    "close": "00:00:00",
+                    "is_24_hours": false
+                }
+            },
+            "bank_holiday": {
+                "type": "standard",
+                "open_time": "00:00:00",
+                "close_time": "00:00:00",
+                "is_24_hours": false
+            }
+        },
+        "fuel_types": [
+            "E10",
+            "B7_STANDARD"
+        ]
+    },
+    {
+        "node_id": "fixture-05-llandudno-junction",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS LLANDUDNO JUNCTION",
+        "is_same_trading_and_brand_name": false,
+        "brand_name": "DEMO FUELS",
+        "temporary_closure": false,
+        "permanent_closure": false,
+        "permanent_closure_date": null,
+        "is_motorway_service_station": false,
+        "is_supermarket_service_station": false,
+        "location": {
+            "address_line_1": "1 FIXTURE ROAD",
+            "address_line_2": null,
+            "city": "LLANDUDNO JUNCTION",
+            "country": "Wales",
+            "county": null,
+            "postcode": "LL31 9XX",
+            "latitude": "53.284",
+            "longitude": "-3.81"
+        },
+        "amenities": [
+            "customer_toilets"
+        ],
+        "opening_times": {
+            "usual_days": {
+                "monday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "tuesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "wednesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "thursday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "friday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "saturday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "sunday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                }
+            },
+            "bank_holiday": {
+                "type": "standard",
+                "open_time": "06:00:00",
+                "close_time": "22:00:00",
+                "is_24_hours": false
+            }
+        },
+        "fuel_types": [
+            "E10",
+            "B7_STANDARD"
+        ]
+    },
+    {
+        "node_id": "fixture-06-llandudno",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS LLANDUDNO",
+        "is_same_trading_and_brand_name": false,
+        "brand_name": "DEMO FUELS",
+        "temporary_closure": false,
+        "permanent_closure": false,
+        "permanent_closure_date": null,
+        "is_motorway_service_station": false,
+        "is_supermarket_service_station": true,
+        "location": {
+            "address_line_1": "1 FIXTURE ROAD",
+            "address_line_2": null,
+            "city": "LLANDUDNO",
+            "country": "WALES",
+            "county": null,
+            "postcode": "LL30 1AB",
+            "latitude": "53.31",
+            "longitude": "-3.815"
+        },
+        "amenities": [
+            "customer_toilets"
+        ],
+        "opening_times": {
+            "usual_days": {
+                "monday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "tuesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "wednesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "thursday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "friday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "saturday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "sunday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                }
+            },
+            "bank_holiday": {
+                "type": "standard",
+                "open_time": "06:00:00",
+                "close_time": "22:00:00",
+                "is_24_hours": false
+            }
+        },
+        "fuel_types": [
+            "E10",
+            "B7_STANDARD"
+        ]
+    },
+    {
+        "node_id": "fixture-07-abergele",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS ABERGELE",
+        "is_same_trading_and_brand_name": false,
+        "brand_name": "DEMO FUELS",
+        "temporary_closure": false,
+        "permanent_closure": false,
+        "permanent_closure_date": null,
+        "is_motorway_service_station": false,
+        "is_supermarket_service_station": false,
+        "location": {
+            "address_line_1": "1 FIXTURE ROAD",
+            "address_line_2": null,
+            "city": "ABERGELE",
+            "country": "Wales",
+            "county": null,
+            "postcode": "LL22 7AA",
+            "latitude": "-3.58",
+            "longitude": "53.286"
+        },
+        "amenities": [
+            "customer_toilets"
+        ],
+        "opening_times": {
+            "usual_days": {
+                "monday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "tuesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "wednesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "thursday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "friday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "saturday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "sunday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                }
+            },
+            "bank_holiday": {
+                "type": "standard",
+                "open_time": "06:00:00",
+                "close_time": "22:00:00",
+                "is_24_hours": false
+            }
+        },
+        "fuel_types": [
+            "E10",
+            "B7_STANDARD"
+        ]
+    },
+    {
+        "node_id": "fixture-08-rhyl",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS RHYL",
+        "is_same_trading_and_brand_name": false,
+        "brand_name": "DEMO FUELS",
+        "temporary_closure": false,
+        "permanent_closure": false,
+        "permanent_closure_date": null,
+        "is_motorway_service_station": false,
+        "is_supermarket_service_station": false,
+        "location": {
+            "address_line_1": "1 FIXTURE ROAD",
+            "address_line_2": null,
+            "city": "RHYL",
+            "country": "WALES",
+            "county": null,
+            "postcode": "LL18 1AA",
+            "latitude": "53.319",
+            "longitude": "-3.491"
+        },
+        "amenities": [
+            "customer_toilets"
+        ],
+        "opening_times": {
+            "usual_days": {
+                "monday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "tuesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "wednesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "thursday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "friday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "saturday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "sunday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                }
+            },
+            "bank_holiday": {
+                "type": "standard",
+                "open_time": "06:00:00",
+                "close_time": "22:00:00",
+                "is_24_hours": false
+            }
+        },
+        "fuel_types": [
+            "E10",
+            "B7_STANDARD"
+        ]
+    },
+    {
+        "node_id": "fixture-09-st-asaph",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS ST ASAPH",
+        "is_same_trading_and_brand_name": false,
+        "brand_name": "DEMO FUELS",
+        "temporary_closure": false,
+        "permanent_closure": false,
+        "permanent_closure_date": null,
+        "is_motorway_service_station": false,
+        "is_supermarket_service_station": false,
+        "location": {
+            "address_line_1": "1 FIXTURE ROAD",
+            "address_line_2": null,
+            "city": "ST ASAPH",
+            "country": "Wales",
+            "county": null,
+            "postcode": "LL17 0AA",
+            "latitude": "53.262",
+            "longitude": "3.44"
+        },
+        "amenities": [
+            "customer_toilets"
+        ],
+        "opening_times": {
+            "usual_days": {
+                "monday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "tuesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "wednesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "thursday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "friday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "saturday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "sunday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                }
+            },
+            "bank_holiday": {
+                "type": "standard",
+                "open_time": "06:00:00",
+                "close_time": "22:00:00",
+                "is_24_hours": false
+            }
+        },
+        "fuel_types": [
+            "E10",
+            "B7_STANDARD"
+        ]
+    },
+    {
+        "node_id": "fixture-10-northop",
+        "public_phone_number": null,
+        "trading_name": "DEMO SERVICES NORTHOP",
+        "is_same_trading_and_brand_name": false,
+        "brand_name": "DEMO FUELS",
+        "temporary_closure": false,
+        "permanent_closure": false,
+        "permanent_closure_date": null,
+        "is_motorway_service_station": true,
+        "is_supermarket_service_station": false,
+        "location": {
+            "address_line_1": "1 FIXTURE ROAD",
+            "address_line_2": null,
+            "city": "NORTHOP",
+            "country": "WALES",
+            "county": null,
+            "postcode": "CH7 6HB",
+            "latitude": "53.198",
+            "longitude": "-3.103"
+        },
+        "amenities": [
+            "customer_toilets"
+        ],
+        "opening_times": {
+            "usual_days": {
+                "monday": {
+                    "open": "00:00:00",
+                    "close": "23:59:59",
+                    "is_24_hours": true
+                },
+                "tuesday": {
+                    "open": "00:00:00",
+                    "close": "23:59:59",
+                    "is_24_hours": true
+                },
+                "wednesday": {
+                    "open": "00:00:00",
+                    "close": "23:59:59",
+                    "is_24_hours": true
+                },
+                "thursday": {
+                    "open": "00:00:00",
+                    "close": "23:59:59",
+                    "is_24_hours": true
+                },
+                "friday": {
+                    "open": "00:00:00",
+                    "close": "23:59:59",
+                    "is_24_hours": true
+                },
+                "saturday": {
+                    "open": "00:00:00",
+                    "close": "23:59:59",
+                    "is_24_hours": true
+                },
+                "sunday": {
+                    "open": "00:00:00",
+                    "close": "23:59:59",
+                    "is_24_hours": true
+                }
+            },
+            "bank_holiday": {
+                "type": "standard",
+                "open_time": "00:00:00",
+                "close_time": "23:59:59",
+                "is_24_hours": true
+            }
+        },
+        "fuel_types": [
+            "E10",
+            "B7_STANDARD"
+        ]
+    },
+    {
+        "node_id": "fixture-11-ewloe",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS EWLOE",
+        "is_same_trading_and_brand_name": false,
+        "brand_name": "DEMO FUELS",
+        "temporary_closure": false,
+        "permanent_closure": false,
+        "permanent_closure_date": null,
+        "is_motorway_service_station": false,
+        "is_supermarket_service_station": false,
+        "location": {
+            "address_line_1": "1 FIXTURE ROAD",
+            "address_line_2": null,
+            "city": "EWLOE",
+            "country": "Wales",
+            "county": null,
+            "postcode": "CH5 3AA",
+            "latitude": "53.198",
+            "longitude": "-3.06"
+        },
+        "amenities": [
+            "customer_toilets"
+        ],
+        "opening_times": {
+            "usual_days": {
+                "monday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "tuesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "wednesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "thursday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "friday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "saturday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "sunday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                }
+            },
+            "bank_holiday": {
+                "type": "standard",
+                "open_time": "06:00:00",
+                "close_time": "22:00:00",
+                "is_24_hours": false
+            }
+        },
+        "fuel_types": [
+            "E10",
+            "B7_STANDARD"
+        ]
+    },
+    {
+        "node_id": "fixture-12-chester",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS CHESTER",
+        "is_same_trading_and_brand_name": false,
+        "brand_name": "DEMO FUELS",
+        "temporary_closure": false,
+        "permanent_closure": false,
+        "permanent_closure_date": null,
+        "is_motorway_service_station": false,
+        "is_supermarket_service_station": false,
+        "location": {
+            "address_line_1": "1 FIXTURE ROAD",
+            "address_line_2": null,
+            "city": "CHESTER",
+            "country": "WALES",
+            "county": null,
+            "postcode": "CH1 4AA",
+            "latitude": "53.2",
+            "longitude": "-2.88"
+        },
+        "amenities": [
+            "customer_toilets"
+        ],
+        "opening_times": {
+            "usual_days": {
+                "monday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "tuesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "wednesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "thursday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "friday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "saturday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "sunday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                }
+            },
+            "bank_holiday": {
+                "type": "standard",
+                "open_time": "06:00:00",
+                "close_time": "22:00:00",
+                "is_24_hours": false
+            }
+        },
+        "fuel_types": [
+            "E10",
+            "B7_STANDARD"
+        ]
+    },
+    {
+        "node_id": "fixture-13-frodsham",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS FRODSHAM",
+        "is_same_trading_and_brand_name": false,
+        "brand_name": "DEMO FUELS",
+        "temporary_closure": true,
+        "permanent_closure": false,
+        "permanent_closure_date": null,
+        "is_motorway_service_station": false,
+        "is_supermarket_service_station": false,
+        "location": {
+            "address_line_1": "1 FIXTURE ROAD",
+            "address_line_2": null,
+            "city": "FRODSHAM",
+            "country": "Wales",
+            "county": null,
+            "postcode": "WA6 7AA",
+            "latitude": "53.294",
+            "longitude": "-2.728"
+        },
+        "amenities": [
+            "customer_toilets"
+        ],
+        "opening_times": {
+            "usual_days": {
+                "monday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "tuesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "wednesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "thursday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "friday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "saturday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "sunday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                }
+            },
+            "bank_holiday": {
+                "type": "standard",
+                "open_time": "06:00:00",
+                "close_time": "22:00:00",
+                "is_24_hours": false
+            }
+        },
+        "fuel_types": [
+            "E10",
+            "B7_STANDARD"
+        ]
+    },
+    {
+        "node_id": "fixture-14-altrincham",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS ALTRINCHAM",
+        "is_same_trading_and_brand_name": false,
+        "brand_name": "DEMO FUELS",
+        "temporary_closure": false,
+        "permanent_closure": false,
+        "permanent_closure_date": null,
+        "is_motorway_service_station": false,
+        "is_supermarket_service_station": false,
+        "location": {
+            "address_line_1": "1 FIXTURE ROAD",
+            "address_line_2": null,
+            "city": "ALTRINCHAM",
+            "country": "WALES",
+            "county": null,
+            "postcode": "WA15 8AA",
+            "latitude": "53.37",
+            "longitude": "-2.37"
+        },
+        "amenities": [
+            "customer_toilets"
+        ],
+        "opening_times": {
+            "usual_days": {
+                "monday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "tuesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "wednesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "thursday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "friday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "saturday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "sunday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                }
+            },
+            "bank_holiday": {
+                "type": "standard",
+                "open_time": "06:00:00",
+                "close_time": "22:00:00",
+                "is_24_hours": false
+            }
+        },
+        "fuel_types": [
+            "E10",
+            "B7_STANDARD"
+        ]
+    },
+    {
+        "node_id": "fixture-15-manchester",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS RINGWAY",
+        "is_same_trading_and_brand_name": false,
+        "brand_name": "DEMO FUELS",
+        "temporary_closure": false,
+        "permanent_closure": false,
+        "permanent_closure_date": null,
+        "is_motorway_service_station": false,
+        "is_supermarket_service_station": false,
+        "location": {
+            "address_line_1": "1 FIXTURE ROAD",
+            "address_line_2": null,
+            "city": "MANCHESTER",
+            "country": "Wales",
+            "county": null,
+            "postcode": "M90 1AA",
+            "latitude": "53.37",
+            "longitude": "-2.27"
+        },
+        "amenities": [
+            "customer_toilets"
+        ],
+        "opening_times": {
+            "usual_days": {
+                "monday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "tuesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "wednesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "thursday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "friday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "saturday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "sunday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                }
+            },
+            "bank_holiday": {
+                "type": "standard",
+                "open_time": "06:00:00",
+                "close_time": "22:00:00",
+                "is_24_hours": false
+            }
+        },
+        "fuel_types": [
+            "E10",
+            "B7_STANDARD"
+        ]
+    },
+    {
+        "node_id": "fixture-16-manchester",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS WYTHENSHAWE",
+        "is_same_trading_and_brand_name": false,
+        "brand_name": "DEMO FUELS",
+        "temporary_closure": false,
+        "permanent_closure": false,
+        "permanent_closure_date": null,
+        "is_motorway_service_station": false,
+        "is_supermarket_service_station": false,
+        "location": {
+            "address_line_1": "1 FIXTURE ROAD",
+            "address_line_2": null,
+            "city": "MANCHESTER",
+            "country": "WALES",
+            "county": null,
+            "postcode": "M22 4AA",
+            "latitude": "53.39",
+            "longitude": "-2.265"
+        },
+        "amenities": [
+            "customer_toilets"
+        ],
+        "opening_times": {
+            "usual_days": {
+                "monday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "tuesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "wednesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "thursday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "friday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "saturday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "sunday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                }
+            },
+            "bank_holiday": {
+                "type": "standard",
+                "open_time": "06:00:00",
+                "close_time": "22:00:00",
+                "is_24_hours": false
+            }
+        },
+        "fuel_types": [
+            "E10",
+            "B7_STANDARD"
+        ]
+    },
+    {
+        "node_id": "fixture-17-manchester",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS MANCHESTER CENTRAL",
+        "is_same_trading_and_brand_name": false,
+        "brand_name": "DEMO FUELS",
+        "temporary_closure": false,
+        "permanent_closure": false,
+        "permanent_closure_date": null,
+        "is_motorway_service_station": false,
+        "is_supermarket_service_station": false,
+        "location": {
+            "address_line_1": "1 FIXTURE ROAD",
+            "address_line_2": null,
+            "city": "MANCHESTER",
+            "country": "Wales",
+            "county": null,
+            "postcode": "M1 1AA",
+            "latitude": "53.479",
+            "longitude": "-2.245"
+        },
+        "amenities": [
+            "customer_toilets"
+        ],
+        "opening_times": {
+            "usual_days": {
+                "monday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "tuesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "wednesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "thursday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "friday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "saturday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "sunday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                }
+            },
+            "bank_holiday": {
+                "type": "standard",
+                "open_time": "06:00:00",
+                "close_time": "22:00:00",
+                "is_24_hours": false
+            }
+        },
+        "fuel_types": [
+            "E10",
+            "B7_STANDARD"
+        ]
+    },
+    {
+        "node_id": "fixture-18-unknown",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS NOWHERE",
+        "is_same_trading_and_brand_name": false,
+        "brand_name": "DEMO FUELS",
+        "temporary_closure": false,
+        "permanent_closure": false,
+        "permanent_closure_date": null,
+        "is_motorway_service_station": false,
+        "is_supermarket_service_station": false,
+        "location": {
+            "address_line_1": "1 FIXTURE ROAD",
+            "address_line_2": null,
+            "city": "UNKNOWN",
+            "country": "WALES",
+            "county": null,
+            "postcode": "ZZ1 1ZZ",
+            "latitude": "0",
+            "longitude": "0"
+        },
+        "amenities": [
+            "customer_toilets"
+        ],
+        "opening_times": {
+            "usual_days": {
+                "monday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "tuesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "wednesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "thursday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "friday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "saturday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "sunday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                }
+            },
+            "bank_holiday": {
+                "type": "standard",
+                "open_time": "06:00:00",
+                "close_time": "22:00:00",
+                "is_24_hours": false
+            }
+        },
+        "fuel_types": [
+            "E10",
+            "B7_STANDARD"
+        ]
+    },
+    {
+        "node_id": "fixture-11-ewloe",
+        "public_phone_number": null,
+        "trading_name": "DEMO FUELS EWLOE",
+        "is_same_trading_and_brand_name": false,
+        "brand_name": "DEMO FUELS",
+        "temporary_closure": false,
+        "permanent_closure": false,
+        "permanent_closure_date": null,
+        "is_motorway_service_station": false,
+        "is_supermarket_service_station": false,
+        "location": {
+            "address_line_1": "1 FIXTURE ROAD",
+            "address_line_2": null,
+            "city": "EWLOE",
+            "country": "Wales",
+            "county": null,
+            "postcode": "CH5 3AA",
+            "latitude": "53.198",
+            "longitude": "-3.06"
+        },
+        "amenities": [
+            "customer_toilets"
+        ],
+        "opening_times": {
+            "usual_days": {
+                "monday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "tuesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "wednesday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "thursday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "friday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "saturday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                },
+                "sunday": {
+                    "open": "06:00:00",
+                    "close": "22:00:00",
+                    "is_24_hours": false
+                }
+            },
+            "bank_holiday": {
+                "type": "standard",
+                "open_time": "06:00:00",
+                "close_time": "22:00:00",
+                "is_24_hours": false
+            }
+        },
+        "fuel_types": [
+            "E10",
+            "B7_STANDARD"
+        ]
+    }
+]
