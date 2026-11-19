@@ -139,7 +139,9 @@ class FuelDataSync
 
     private function run(string $type, ?CarbonImmutable $since, callable $work): SyncRun
     {
-        return Cache::lock(self::LOCK_NAME, 900)->block(120, function () use ($type, $since, $work) {
+        $wait = (int) config('fueldetour.fuel_finder.lock_wait_seconds');
+
+        return Cache::lock(self::LOCK_NAME, 900)->block($wait, function () use ($type, $since, $work) {
             $run = SyncRun::create([
                 'type' => $type,
                 'source' => $this->source->name(),

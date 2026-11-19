@@ -53,6 +53,9 @@ return [
         // run MINUS this overlap, to cover clock skew and late submissions.
         'incremental_overlap_minutes' => 10,
 
+        // How long a sync waits for another sync to release the API lock.
+        'lock_wait_seconds' => 120,
+
         'fixture_path' => base_path('tests/Fixtures/fuel-finder'),
     ],
 
