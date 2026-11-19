@@ -2,6 +2,7 @@
 
 namespace App\Services\Routing;
 
+use App\Support\Geo;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Cache;
@@ -38,29 +39,86 @@ class OpenRouteServiceClient
             return Place::fromArray($cached);
         }
 
-        $json = $this->request('get', $this->config['geocode_path'], [
-            'text' => $text,
-            'boundary.country' => 'GB',
-            'size' => 1,
-        ]);
+        // Seams found in live testing:
+        //  - Restricted to GB, "Dublin" matched a venue "Dublin - Liverpool"
+        //    (Bootle) with confidence 1.0 and match_type "exact".
+        //  - match_type is unreliable: the CORRECT Belfast and Brighton come
+        //    back as "fallback", the WRONG "Newport Community" as "exact".
+        // So we trust the place NAME: it must equal what was typed (before
+        // any comma); text after the comma ("Newport, Wales") must appear in
+        // the label. Real places are preferred; venues ("Manchester Airport")
+        // are only used when no place has that name.
+        [$name, $qualifier] = array_map('trim', array_pad(explode(',', $text, 2), 2, ''));
+        $candidates = $this->namedMatches($text, self::PLACE_LAYERS, $name, $qualifier)
+            ?: $this->namedMatches($text, 'venue', $name, $qualifier);
 
-        $feature = $json['features'][0] ?? null;
-        $coordinates = $feature['geometry']['coordinates'] ?? null;
-
-        if (! is_array($coordinates) || count($coordinates) < 2) {
+        if ($candidates === []) {
             throw RoutingException::placeNotFound($text);
         }
 
-        $place = new Place(
-            query: $text,
-            label: (string) ($feature['properties']['label'] ?? $text),
-            lat: (float) $coordinates[1],   // GeoJSON is [lon, lat]
-            lon: (float) $coordinates[0],
-        );
+        // Same name, far apart ("Newport": Isle of Wight, Shropshire or
+        // Wales?) means we'd be guessing: ask the user instead.
+        $first = $candidates[0];
+        $elsewhere = array_values(array_filter($candidates, fn (Place $p) => Geo::distance($first->lat, $first->lon, $p->lat, $p->lon) > 15000));
+        if ($elsewhere !== []) {
+            $labels = array_values(array_unique(array_map(fn (Place $p) => $p->label, [$first, ...$elsewhere])));
+            throw RoutingException::ambiguousPlace($text, array_slice($labels, 0, 4));
+        }
+
+        $place = $first;
 
         Cache::put($key, $place->toArray(), now()->addDays((int) config('fueldetour.journey.geocode_cache_days')));
 
         return $place;
+    }
+
+    /** Pelias layers that are real places rather than points of interest. */
+    private const PLACE_LAYERS = 'locality,localadmin,borough,neighbourhood,county,macrocounty,region,postalcode,address,street';
+
+    /**
+     * Results whose name is what the user typed ("Dublin Road" is not
+     * "Dublin"), optionally narrowed by a qualifier ("Wales").
+     *
+     * @return list<Place>
+     */
+    private function namedMatches(string $text, string $layers, string $name, string $qualifier): array
+    {
+        $json = $this->request('get', $this->config['geocode_path'], [
+            'text' => $text,
+            'boundary.country' => 'GB',
+            'layers' => $layers,
+            'size' => 10,
+        ]);
+
+        // Compare case- and space-insensitively so "ll651dq" matches "LL65 1DQ".
+        $normalise = fn (?string $s) => preg_replace('/[^a-z0-9]/', '', mb_strtolower((string) $s));
+
+        $places = [];
+        foreach ($json['features'] ?? [] as $feature) {
+            $coordinates = $feature['geometry']['coordinates'] ?? null;
+            if (! is_array($coordinates) || count($coordinates) < 2) {
+                continue;
+            }
+
+            // Some places carry alternative names: "Londonderry / Derry".
+            $properties = $feature['properties'] ?? [];
+            $names = array_map($normalise, explode('/', (string) ($properties['name'] ?? '')));
+            if (! in_array($normalise($name), $names, true)) {
+                continue;
+            }
+            if ($qualifier !== '' && ! str_contains(mb_strtolower((string) ($properties['label'] ?? '')), mb_strtolower($qualifier))) {
+                continue;
+            }
+
+            $places[] = new Place(
+                query: $text,
+                label: (string) ($feature['properties']['label'] ?? $text),
+                lat: (float) $coordinates[1],   // GeoJSON is [lon, lat]
+                lon: (float) $coordinates[0],
+            );
+        }
+
+        return $places;
     }
 
     /**

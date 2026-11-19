@@ -23,10 +23,33 @@ trait FakesOpenRouteService
         [53.4794, -2.2453],
     ];
 
+    /** query => list of [label, lat, lon, layer, match_type] (as seen from the live geocoder) */
     protected array $places = [
-        'holyhead' => ['Holyhead, Isle of Anglesey, Wales', 53.3090, -4.6330],
-        'manchester' => ['Manchester, England', 53.4794, -2.2453],
-        'holyhead town' => ['Holyhead Town, Wales', 53.3100, -4.6320],
+        'holyhead' => [['Holyhead, Isle of Anglesey, Wales', 53.3090, -4.6330, 'locality', 'exact']],
+        'manchester' => [['Manchester, England', 53.4794, -2.2453, 'locality', 'exact']],
+        'holyhead town' => [['Holyhead Town, Wales', 53.3100, -4.6320, 'locality', 'exact']],
+        // Two real towns far apart: genuinely ambiguous.
+        'newport' => [
+            ['Newport, England', 50.7010, -1.2880, 'locality', 'exact'],
+            ['Newport, Wales', 51.5880, -2.9980, 'locality', 'exact'],
+        ],
+        // Not a UK place: only streets and venues that CONTAIN the name.
+        'dublin' => [
+            ['Dublin Road, Northern Ireland', 54.5800, -5.9300, 'street', 'exact'],
+            ['Dublin - Liverpool, Bootle, England', 53.4460, -3.0170, 'venue', 'exact'],
+            ['The Dublin Castle, London, England', 51.5380, -0.1460, 'venue', 'exact'],
+        ],
+        // A venue people really do type, with duplicate entries close together.
+        'manchester airport' => [
+            ['Manchester Airport, Ringway, England', 53.3650, -2.2720, 'venue', 'exact'],
+            ['Manchester Airport, Ringway, England', 53.3655, -2.2730, 'venue', 'exact'],
+        ],
+        // Only results whose NAME merely contains the query: not a match.
+        'smethwickish' => [['Londonderry, Smethwick, England', 52.4930, -1.9700, 'neighbourhood', 'fallback']],
+        // Live: the correct Belfast is flagged "fallback"; it must still be used.
+        'belfast' => [['Belfast, Northern Ireland', 54.5970, -5.9300, 'locality', 'fallback']],
+        // Live: one place, two names.
+        'derry' => [['Londonderry / Derry, Northern Ireland', 54.9966, -7.3086, 'locality', 'exact']],
     ];
 
     protected function fakeOrs(array $overrides = []): void
@@ -35,15 +58,22 @@ trait FakesOpenRouteService
 
         Http::fake($overrides + [
             'ors.test/pelias/v1/search*' => function (Request $request) {
-                $match = $this->places[strtolower($request['text'])] ?? null;
+                $wantVenues = ($request['layers'] ?? '') === 'venue';
+                $name = strtolower(trim(explode(',', $request['text'])[0]));
+                $matches = array_filter(
+                    $this->places[$name] ?? [],
+                    fn ($m) => ($m[3] === 'venue') === $wantVenues,
+                );
 
                 return Http::response([
                     'type' => 'FeatureCollection',
-                    'features' => $match ? [[
+                    'features' => array_values(array_map(fn ($m) => [
                         'type' => 'Feature',
-                        'geometry' => ['type' => 'Point', 'coordinates' => [$match[2], $match[1]]],
-                        'properties' => ['label' => $match[0]],
-                    ]] : [],
+                        'geometry' => ['type' => 'Point', 'coordinates' => [$m[2], $m[1]]],
+                        // Pelias: "name" is the place itself, "label" adds its context.
+                        'properties' => ['name' => trim(explode(',', $m[0])[0]), 'label' => $m[0],
+                            'layer' => $m[3], 'match_type' => $m[4], 'confidence' => 1],
+                    ], $matches)),
                 ], 200, ['x-ratelimit-remaining' => '999']);
             },
             // Like the real API: /geojson answers 406 unless geo+json is acceptable.

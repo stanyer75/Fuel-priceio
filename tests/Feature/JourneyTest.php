@@ -116,6 +116,69 @@ class JourneyTest extends TestCase
             ->assertJsonPath('error.message', 'Couldn\'t find a UK place matching "Atlantis".');
     }
 
+    public function test_ambiguous_town_asks_instead_of_guessing(): void
+    {
+        $this->artisan('fuel:sync')->assertSuccessful();
+        $this->fakeOrs();
+
+        $this->search(['to' => 'Newport'])->assertStatus(422)
+            ->assertJsonPath('error.code', 'ambiguous_place')
+            ->assertJsonFragment(['source' => 'openrouteservice']);
+        $this->assertStringContainsString('Newport, Wales', $this->search(['to' => 'Newport'])->json('error.message'));
+    }
+
+    public function test_non_uk_city_is_not_silently_replaced_by_a_uk_venue_or_street(): void
+    {
+        // Live finding: "Dublin" geocoded to a ferry-terminal venue in Bootle.
+        $this->artisan('fuel:sync')->assertSuccessful();
+        $this->fakeOrs();
+
+        $this->search(['to' => 'Dublin'])->assertStatus(422)->assertJsonPath('error.code', 'place_not_found');
+    }
+
+    public function test_qualifier_after_comma_picks_the_right_town(): void
+    {
+        $this->artisan('fuel:sync')->assertSuccessful();
+        $this->fakeOrs();
+
+        $this->search(['to' => 'Newport, Wales'])->assertOk()->assertJsonPath('to.label', 'Newport, Wales');
+    }
+
+    public function test_place_with_alternative_names_matches_either(): void
+    {
+        $this->artisan('fuel:sync')->assertSuccessful();
+        $this->fakeOrs();
+
+        $this->search(['to' => 'Derry'])->assertOk()->assertJsonPath('to.label', 'Londonderry / Derry, Northern Ireland');
+    }
+
+    public function test_correct_place_flagged_fallback_by_geocoder_is_still_used(): void
+    {
+        // Live finding: Pelias marks the real Belfast as match_type "fallback".
+        $this->artisan('fuel:sync')->assertSuccessful();
+        $this->fakeOrs();
+
+        $this->search(['to' => 'Belfast'])->assertOk()->assertJsonPath('to.label', 'Belfast, Northern Ireland');
+    }
+
+    public function test_venue_is_used_when_no_place_matches_and_it_is_unambiguous(): void
+    {
+        $this->artisan('fuel:sync')->assertSuccessful();
+        $this->fakeOrs();
+
+        $this->search(['to' => 'Manchester Airport'])->assertOk()
+            ->assertJsonPath('to.label', 'Manchester Airport, Ringway, England');
+        Http::assertSent(fn (Request $r) => str_contains($r->url(), 'pelias') && $r['layers'] === 'venue');
+    }
+
+    public function test_weak_fallback_match_is_not_trusted(): void
+    {
+        $this->artisan('fuel:sync')->assertSuccessful();
+        $this->fakeOrs();
+
+        $this->search(['to' => 'Smethwickish'])->assertStatus(422)->assertJsonPath('error.code', 'place_not_found');
+    }
+
     public function test_same_start_and_end_is_rejected(): void
     {
         $this->artisan('fuel:sync')->assertSuccessful();

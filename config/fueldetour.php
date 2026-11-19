@@ -60,6 +60,10 @@ return [
 
         // Route coverage: circles are split when they hit the 20-result cap,
         // down to this window length; a hard budget caps one search.
+        // Measured live (19 Nov 2026): starting at 6 miles instead of 4 used
+        // MORE requests (Holyhead-Manchester 22 -> 25, Edinburgh-Glasgow
+        // ~11 -> 18) because big circles hit the 20-result cap and split.
+        'initial_radius_miles' => 4.0,
         'min_window_miles' => 1.0,
         'max_requests_per_search' => 60,
 

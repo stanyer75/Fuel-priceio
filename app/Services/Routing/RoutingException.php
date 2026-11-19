@@ -37,6 +37,14 @@ class RoutingException extends UpstreamException
         return new self('openrouteservice', 'place_not_found', "Couldn't find a UK place matching \"{$query}\".", 422);
     }
 
+    /** @param  list<string>  $suggestions */
+    public static function ambiguousPlace(string $query, array $suggestions): self
+    {
+        return new self('openrouteservice', 'ambiguous_place', sprintf(
+            '"%s" matches several UK places: %s. Add a county or country (e.g. "%s, Wales") or use a postcode. (Only UK places are supported.)',
+            $query, implode('; ', $suggestions), $query), 422);
+    }
+
     public static function noRoute(?string $upstream): self
     {
         return new self('openrouteservice', 'no_route',

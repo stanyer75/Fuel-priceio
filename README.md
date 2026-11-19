@@ -61,7 +61,7 @@ php artisan schedule:work    # keeps it fresh (stations hourly, prices every 15 
 ### Tests
 
 ```bash
-php artisan test             # 90 tests, ~2 seconds, fully offline
+php artisan test             # 97 tests, ~2 seconds, fully offline
 ```
 
 Every HTTP call is faked (`Http::preventStrayRequests()`), so tests never touch real APIs or quotas. The fakes behave like the real services as probed (distance-sorted and capped at 20; 302 for bad parameters; 406 without the geo+json `Accept` header). `phpunit.xml` pins the sources so a reviewer's `.env` can't leak in.
@@ -177,7 +177,8 @@ This is compared against the *convenient* station (the one needing the least det
 | A failed sync | Recorded with its error; previously synced data is kept; the next run resumes from the last *good* run |
 | Straight-line distance ≠ road distance (a station 200 m away may be across a dual carriageway) | The corridor only *shortlists* stations; real detours come from the ORS road matrix. In the first live run, a station 0.14 mi from the A55 was an **8.2 mi** detour |
 | The matrix returns `null` for stations it can't snap to a road | Counted as "unroutable" and left out; the search still succeeds |
-| Holyhead is a ferry port | Routes avoid ferries, so "Holyhead → Dublin" is reported as no driving route |
+| **Geocoding picks a confident wrong answer.** Restricted to the UK, "Dublin" matched a *venue* "Dublin - Liverpool" in Bootle with confidence 1.0 and `match_type: exact`. Meanwhile the *correct* Belfast and Brighton come back as `fallback`, so confidence and match type are both unreliable | Trust the place **name** instead: it must equal what was typed ("Dublin Road" ≠ "Dublin"); alternative names count ("Londonderry / Derry"). Real places are preferred over venues ("Manchester Airport" still works). Same-name places far apart ("Newport") return `ambiguous_place` with suggestions; "Newport, Wales" narrows it by label. All found in live testing ([geocode](app/Services/Routing/OpenRouteServiceClient.php)) |
+| Holyhead is a ferry port | Routes avoid ferries; non-UK destinations are refused at geocoding |
 | Same start and end; unknown place; journeys over 450 miles; empty database | Specific 422/503 errors explaining what to do |
 
 ---
@@ -200,6 +201,7 @@ All tunables and assumptions live in one file: [config/fueldetour.php](config/fu
 
 - **CheckFuelPrices is a small third-party service**, and the endpoint used is undocumented (it powers their widget). It could change or disappear without notice; there's no uptime guarantee. Mitigations: strict validation, partial-failure handling, and the `synced` sources as a fallback.
 - In very dense areas (central Manchester), even 1-mile circles can hit the 20-result cap; the UI warns when this happens.
+- **Capacity:** measured live, an uncached search costs 7–30 CheckFuelPrices requests (Newport → Bristol 7, Holyhead → Manchester 22, London → Brighton 30). With our self-imposed 60/minute cap, that's roughly 2–6 *new* searches per minute across the whole app; cached repeats are free. When the cap is reached, a search in progress returns partial results with a warning, and a new search gets a 503 saying how long to wait. Raising `CFP_MAX_PER_MINUTE` is a one-line change, but it should be agreed with the provider.
 - Only the 25 most useful corridor stations get exact road detours (to protect the ORS matrix quota of 500/day); the rest are counted as "not checked".
 - Opening hours are stored (synced source) but not yet used ("is it open when I arrive?").
 - Stations that disappear from the feed are not deleted; that would be unsafe after a partial sync.

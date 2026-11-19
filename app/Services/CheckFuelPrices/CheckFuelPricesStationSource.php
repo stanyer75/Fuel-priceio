@@ -18,7 +18,8 @@ use App\Support\Geo;
  *   - Split the route into windows of length L. A circle centred on the
  *     window midpoint with radius r = sqrt((L/2)^2 + c^2) covers the whole
  *     corridor (half-width c) for that window.
- *   - Start with r = 2c (L = 2*sqrt(3)*c, about 6.9 miles for c = 2 miles).
+ *   - Start with r = max(2c, initial_radius_miles), i.e. L = 2*sqrt(r^2 - c^2)
+ *     (about 11.3 miles for r = 6, c = 2).
  *   - If a circle returns the full 20 results it was TRUNCATED (a town or
  *     city): cheaper stations further out are invisible. Split the window
  *     in half and query again, down to a minimum window length.
@@ -50,7 +51,11 @@ class CheckFuelPricesStationSource implements StationSource
         $total = end($cumulative);
 
         $c = Geo::milesToMetres($corridorMiles);
-        $initialWindow = 2 * sqrt(3) * $c;
+        // Window length for the starting radius r0: L = 2 * sqrt(r0^2 - c^2).
+        // Bigger circles = fewer requests on rural stretches; busy areas
+        // still get split when they hit the 20-result cap.
+        $r0 = max(2 * $c, Geo::milesToMetres((float) $this->config['initial_radius_miles']));
+        $initialWindow = 2 * sqrt($r0 ** 2 - $c ** 2);
         $minWindow = Geo::milesToMetres((float) $this->config['min_window_miles']);
 
         // Queue of [start, end] windows (metres along the route), in route order.
