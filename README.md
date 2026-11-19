@@ -191,7 +191,7 @@ Everything lives in `.env` (documented in [`.env.example`](.env.example)). All t
 |---|---|---|
 | `ORS_API_KEY` | none | **Required.** Your openrouteservice key |
 | `PRICE_SOURCE` | `checkfuelprices` | `checkfuelprices` = live prices; `synced` = local copy (sample data or official API) |
-| `FUEL_FINDER_DRIVER` | `fixture` | With `PRICE_SOURCE=synced`: `fixture` = **fictional sample data** (offline, shows a "SAMPLE DATA" banner); `live` = official API |
+| `FUEL_FINDER_DRIVER` | `fixture` | *Not in `.env.example`; only needed for the [official API](#optional-the-official-uk-government-fuel-finder-api).* With `PRICE_SOURCE=synced`: `fixture` = **fictional sample data** (offline, shows a "SAMPLE DATA" banner); `live` = official API |
 | `CFP_MAX_PER_MINUTE` | `60` | Our own cap on CheckFuelPrices requests (it publishes no limit) |
 | `CFP_MIN_INTERVAL_MS` | `250` | Gap between CheckFuelPrices requests |
 
