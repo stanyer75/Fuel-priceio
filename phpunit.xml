@@ -32,5 +32,9 @@
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
+        <env name="FUEL_FINDER_DRIVER" value="fixture"/>
+        <env name="FUEL_FINDER_CLIENT_ID" value=""/>
+        <env name="FUEL_FINDER_CLIENT_SECRET" value=""/>
+        <env name="ORS_API_KEY" value=""/>
     </php>
 </phpunit>

@@ -51,12 +51,12 @@ class FuelFinderNormaliser
 
         return NormalisedRecord::accept([
             'node_id' => $nodeId,
-            'trading_name' => $this->text($raw['trading_name'] ?? null) ?? 'Unnamed forecourt',
-            'brand_name' => $this->text($raw['brand_name'] ?? null),
-            'address_line_1' => $this->text($location['address_line_1'] ?? null),
-            'address_line_2' => $this->text($location['address_line_2'] ?? null),
-            'city' => $this->text($location['city'] ?? null),
-            'county' => $this->text($location['county'] ?? null),
+            'trading_name' => $this->displayCase($this->text($raw['trading_name'] ?? null)) ?? 'Unnamed forecourt',
+            'brand_name' => $this->displayCase($this->text($raw['brand_name'] ?? null)),
+            'address_line_1' => $this->displayCase($this->text($location['address_line_1'] ?? null)),
+            'address_line_2' => $this->displayCase($this->text($location['address_line_2'] ?? null)),
+            'city' => $this->displayCase($this->text($location['city'] ?? null)),
+            'county' => $this->displayCase($this->text($location['county'] ?? null)),
             'postcode' => $postcode,
             'latitude' => round($lat, 6),
             'longitude' => round($lon, 6),
@@ -249,6 +249,24 @@ class FuelFinderNormaliser
         }
 
         return [$days, $unknown];
+    }
+
+    /**
+     * Seam: text fields often arrive in ALL CAPS ("DEMO FUELS LLANDUDNO").
+     * Title-case those for display, but leave mixed-case text alone (it was
+     * typed deliberately) and keep known acronyms upper case.
+     */
+    public function displayCase(?string $value): ?string
+    {
+        if ($value === null || $value !== mb_strtoupper($value) || ! preg_match('/[A-Z]{2}/', $value)) {
+            return $value;
+        }
+
+        $acronyms = ['BP', 'MFG', 'SGN', 'JET', 'UK', 'HGV', 'LPG', 'EV', 'MSA', 'A55', 'M56'];
+
+        return preg_replace_callback('/[A-Za-z0-9]+/', function ($m) use ($acronyms) {
+            return in_array($m[0], $acronyms, true) ? $m[0] : mb_convert_case(mb_strtolower($m[0]), MB_CASE_TITLE);
+        }, $value);
     }
 
     private function text(mixed $value): ?string
