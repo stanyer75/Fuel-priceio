@@ -127,7 +127,7 @@ class JourneyTest extends TestCase
     public function test_ors_daily_quota_403_is_distinguished_from_a_bad_key(): void
     {
         $this->artisan('fuel:sync')->assertSuccessful();
-        $this->fakeOrs(['ors.test/geocode/search*' => Http::response(['error' => 'Quota exceeded'], 403)]);
+        $this->fakeOrs(['ors.test/pelias/v1/search*' => Http::response(['error' => 'Quota exceeded'], 403)]);
 
         $this->search()->assertStatus(503)->assertJsonPath('error.code', 'quota_exhausted');
     }
@@ -135,7 +135,7 @@ class JourneyTest extends TestCase
     public function test_ors_bad_key_403(): void
     {
         $this->artisan('fuel:sync')->assertSuccessful();
-        $this->fakeOrs(['ors.test/geocode/search*' => Http::response(['error' => 'Access to this API has been disallowed'], 403)]);
+        $this->fakeOrs(['ors.test/pelias/v1/search*' => Http::response(['error' => 'Access to this API has been disallowed'], 403)]);
 
         $this->search()->assertStatus(503)->assertJsonPath('error.code', 'invalid_api_key');
     }
@@ -143,7 +143,7 @@ class JourneyTest extends TestCase
     public function test_ors_route_not_found_maps_to_no_route(): void
     {
         $this->artisan('fuel:sync')->assertSuccessful();
-        $this->fakeOrs(['ors.test/v2/directions/*' => Http::response(['error' => ['code' => 2009, 'message' => 'Route could not be found']], 404)]);
+        $this->fakeOrs(['ors.test/openrouteservice/v2/directions/*' => Http::response(['error' => ['code' => 2009, 'message' => 'Route could not be found']], 404)]);
 
         $this->search()->assertStatus(422)->assertJsonPath('error.code', 'no_route');
     }
@@ -151,7 +151,7 @@ class JourneyTest extends TestCase
     public function test_unroutable_station_in_matrix_is_counted_not_fatal(): void
     {
         $this->artisan('fuel:sync')->assertSuccessful();
-        $this->fakeOrs(['ors.test/v2/matrix/*' => function (Request $r) {
+        $this->fakeOrs(['ors.test/openrouteservice/v2/matrix/*' => function (Request $r) {
             $n = count($r['sources']);
             $row = fn ($i) => array_map(fn ($j) => ($i === 1 || $j === 1) && $i !== $j ? null : 1000.0 * ($i + $j + 1), range(0, $n - 1));
             $m = array_map($row, range(0, $n - 1));

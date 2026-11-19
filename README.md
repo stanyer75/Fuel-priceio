@@ -59,7 +59,9 @@ php artisan test             # 77 tests, ~2 seconds, fully offline
 
 Every HTTP call is faked (`Http::preventStrayRequests()`), so tests never touch real APIs or quotas. `phpunit.xml` pins the fixture driver so a reviewer's `.env` can't leak in.
 
-> **Windows note:** if you see `could not find driver`, enable `extension=pdo_sqlite` in your `php.ini` (it ships with PHP but is often commented out).
+> **Windows notes** (both in the `php.ini` that `php --ini` reports as loaded, not the `-development`/`-production` templates):
+> - `could not find driver` → uncomment `extension=pdo_sqlite`.
+> - `cURL error 60: unable to get local issuer certificate` → PHP has no CA bundle. Set `curl.cainfo` and `openssl.cafile` to a CA bundle, e.g. Git for Windows' `C:\Program Files\Git\usr\ssl\certs\ca-bundle.crt` or [curl's cacert.pem](https://curl.se/docs/caextract.html). Don't disable TLS verification.
 
 ---
 
@@ -115,6 +117,8 @@ This is compared against the *convenient* station (the one needing the least det
 | Fuel Finder: 1 concurrent request per client (a second one gets a 429) | All syncs share one cache lock ([FuelDataSync](app/Services/FuelFinder/FuelDataSync.php)); requests are sequential and spaced out |
 | Fuel Finder: 100/min per official docs, 30/min per a community copy of the spec | Defaults to a conservative 2.1s gap (configurable). A full sync is ~35 requests, so it costs about a minute |
 | 429 / 5xx | Retried with exponential backoff, honouring `Retry-After`; 401/403/404 are never retried blindly |
+| ORS moved host: on `api.heigit.org` routing lives under `/openrouteservice/v2/…` and geocoding under `/pelias/v1/search` (the old host used `/v2/…` and `/geocode/search`) | Prefix and path are config (`ORS_ROUTING_PREFIX`, `ORS_GEOCODE_PATH`), found by probing the live API |
+| ORS `/directions/…/geojson` returns **406** if you send `Accept: application/json` | That call sends `Accept: application/geo+json`; the test fake enforces this too |
 | ORS: **403 = daily quota used up**, 429 = per-minute limit | The two are told apart and explained; `x-ratelimit-remaining` is surfaced in responses |
 | Protecting the shared ORS quota | Geocodes/routes/searches cached; per-IP throttle on our own endpoints |
 
@@ -143,7 +147,7 @@ This is compared against the *convenient* station (the one needing the least det
 | Retailers have 30 min to report, and we sync every 15 min, so a price can be ~45 min behind the pump | Each price shows its age; >48h is flagged; >14 days is excluded (and counted) |
 | An overlapping or late incremental window delivers an **older** price | Never overwrites a newer stored price |
 | A failed sync | Recorded with its error; previously synced data is kept; the next run resumes from the last *good* run |
-| Straight-line distance ≠ road distance (a station 200 m away may be across a dual carriageway) | The corridor only *shortlists* stations; real detours come from the ORS road matrix |
+| Straight-line distance ≠ road distance (a station 200 m away may be across a dual carriageway) | The corridor only *shortlists* stations; real detours come from the ORS road matrix. In the first live run, a station 0.14 mi from the A55 was an **8.2 mi** detour |
 | The matrix returns `null` for stations it can't snap to a road | Counted as "unroutable" and left out; the search still succeeds |
 | Holyhead is a ferry port | Routes avoid ferries, so "Holyhead → Dublin" is reported as no driving route |
 | Same start and end; unknown place; journeys over 450 miles; empty database | Specific 422/503 errors explaining what to do |
@@ -156,7 +160,9 @@ This area changed a lot in 2026; this is what was confirmed against official doc
 
 **Confirmed (official):** Fuel Finder live since 2 Feb 2026 under the Motor Fuel Price (Open Data) Regulations 2025; OAuth2 client credentials with GOV.UK One Login; prices published within 30 min of a change; live limit 100 req/min, 1 concurrent request; caching guidance (stations 1h, prices 15m, searches 5m); the CMA interim retailer JSON feeds **closed on 1 May 2026**. ORS free plan: 2,000 directions/day, 40/min; `api.openrouteservice.org` deprecated in favour of `api.heigit.org`.
 
-**Unverified (community sources, configurable):** Fuel Finder endpoint paths and response shapes, the 1h token TTL, the 403 for non-UK IPs, and the 30/min figure. The exact path layout on `api.heigit.org` (set `ORS_BASE_URL` if it differs). The free-plan ORS **matrix** limits (we send at most 27 locations per request).
+**Verified by live calls (Nov 2026):** the `api.heigit.org` path layout above; geocode/directions/matrix response shapes; matrix quota **500/day** (`X-Ratelimit-Limit` header); the geo+json `Accept` requirement.
+
+**Unverified (community sources, configurable):** Fuel Finder endpoint paths and response shapes, the 1h token TTL, the 403 for non-UK IPs, and the 30/min figure. The ORS matrix per-request location limit (we send at most 27 locations).
 
 All tunables and assumptions live in one file: [config/fueldetour.php](config/fueldetour.php).
 

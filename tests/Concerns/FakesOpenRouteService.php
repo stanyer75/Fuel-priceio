@@ -34,7 +34,7 @@ trait FakesOpenRouteService
         config(['fueldetour.routing.api_key' => 'test-key', 'fueldetour.routing.base_url' => 'https://ors.test']);
 
         Http::fake($overrides + [
-            'ors.test/geocode/search*' => function (Request $request) {
+            'ors.test/pelias/v1/search*' => function (Request $request) {
                 $match = $this->places[strtolower($request['text'])] ?? null;
 
                 return Http::response([
@@ -46,15 +46,18 @@ trait FakesOpenRouteService
                     ]] : [],
                 ], 200, ['x-ratelimit-remaining' => '999']);
             },
-            'ors.test/v2/directions/*' => fn () => Http::response([
-                'type' => 'FeatureCollection',
-                'features' => [[
-                    'type' => 'Feature',
-                    'geometry' => ['type' => 'LineString', 'coordinates' => array_map(fn ($p) => [$p[1], $p[0]], $this->holyheadToManchester)],
-                    'properties' => ['summary' => ['distance' => 165000.0, 'duration' => 7200.0]],
-                ]],
-            ], 200, ['x-ratelimit-remaining' => '1998']),
-            'ors.test/v2/matrix/*' => function (Request $request) {
+            // Like the real API: /geojson answers 406 unless geo+json is acceptable.
+            'ors.test/openrouteservice/v2/directions/*' => fn (Request $request) => ! str_contains($request->header('Accept')[0] ?? '', 'application/geo+json')
+                ? Http::response(['error' => ['code' => 2007, 'message' => 'This response format is not supported']], 406)
+                : Http::response([
+                    'type' => 'FeatureCollection',
+                    'features' => [[
+                        'type' => 'Feature',
+                        'geometry' => ['type' => 'LineString', 'coordinates' => array_map(fn ($p) => [$p[1], $p[0]], $this->holyheadToManchester)],
+                        'properties' => ['summary' => ['distance' => 165000.0, 'duration' => 7200.0]],
+                    ]],
+                ], 200, ['x-ratelimit-remaining' => '1998']),
+            'ors.test/openrouteservice/v2/matrix/*' => function (Request $request) {
                 $loc = $request['locations'];
                 $distances = $durations = [];
                 foreach ($request['sources'] as $i => $s) {

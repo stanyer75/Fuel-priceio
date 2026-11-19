@@ -70,10 +70,21 @@ return [
     'routing' => [
         'base_url' => env('ORS_BASE_URL', 'https://api.heigit.org'),
         'api_key' => env('ORS_API_KEY'),
+
+        // VERIFIED by live probe (Nov 2026): on api.heigit.org the services
+        // live under different prefixes than on the old host:
+        //   routing:   /openrouteservice/v2/{directions|matrix}/...
+        //   geocoding: /pelias/v1/search   (old host: /geocode/search)
+        // For the old host set ORS_ROUTING_PREFIX="" and
+        // ORS_GEOCODE_PATH=/geocode/search.
+        'routing_prefix' => env('ORS_ROUTING_PREFIX', '/openrouteservice'),
+        'geocode_path' => env('ORS_GEOCODE_PATH', '/pelias/v1/search'),
         'profile' => 'driving-car',
         'timeout_seconds' => 20,
 
-        // Free plan matrix limits are UNVERIFIED; keep requests small.
+        // Free plan matrix quota: 500 requests/day (VERIFIED via the
+        // X-Ratelimit-Limit header). Per-request location limit unverified,
+        // so keep requests small.
         // Locations sent = 2 (start, end) + this many candidate stations.
         'matrix_max_candidates' => 25,
     ],

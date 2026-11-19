@@ -38,7 +38,7 @@ class OpenRouteServiceClient
             return Place::fromArray($cached);
         }
 
-        $json = $this->request('get', '/geocode/search', [
+        $json = $this->request('get', $this->config['geocode_path'], [
             'text' => $text,
             'boundary.country' => 'GB',
             'size' => 1,
@@ -71,14 +71,14 @@ class OpenRouteServiceClient
         $key = sprintf('ors:route:%.5f,%.5f:%.5f,%.5f', $from->lat, $from->lon, $to->lat, $to->lon);
 
         return Cache::remember($key, now()->addHours((int) config('fueldetour.journey.route_cache_hours')), function () use ($from, $to) {
-            $path = "/v2/directions/{$this->config['profile']}/geojson";
+            $path = "{$this->config['routing_prefix']}/v2/directions/{$this->config['profile']}/geojson";
             $json = $this->request('post', $path, [
                 'coordinates' => [[$from->lon, $from->lat], [$to->lon, $to->lat]],
                 'instructions' => false,
                 // Holyhead is a ferry port: without this, "Holyhead to Dublin"
                 // would happily route across the Irish Sea.
                 'options' => ['avoid_features' => ['ferries']],
-            ]);
+            ], accept: 'application/geo+json'); // seam: /geojson returns 406 for Accept: application/json
 
             $feature = $json['features'][0] ?? null;
             $line = $feature['geometry']['coordinates'] ?? null;
@@ -102,7 +102,7 @@ class OpenRouteServiceClient
      */
     public function matrix(array $locations, array $sources, array $destinations): array
     {
-        $path = "/v2/matrix/{$this->config['profile']}";
+        $path = "{$this->config['routing_prefix']}/v2/matrix/{$this->config['profile']}";
         $json = $this->request('post', $path, [
             'locations' => array_map(fn ($p) => [$p[1], $p[0]], $locations),
             'sources' => $sources,
@@ -118,7 +118,7 @@ class OpenRouteServiceClient
         return ['distances' => $json['distances'], 'durations' => $json['durations']];
     }
 
-    private function request(string $method, string $path, array $payload): array
+    private function request(string $method, string $path, array $payload, string $accept = 'application/json'): array
     {
         if (blank($this->config['api_key'])) {
             throw RoutingException::missingKey();
@@ -128,7 +128,7 @@ class OpenRouteServiceClient
             try {
                 $http = Http::baseUrl(rtrim($this->config['base_url'], '/'))
                     ->withHeaders(['Authorization' => $this->config['api_key']])
-                    ->acceptJson()
+                    ->accept($accept)
                     ->timeout((int) $this->config['timeout_seconds']);
 
                 $response = $method === 'get' ? $http->get($path, $payload) : $http->asJson()->post($path, $payload);
