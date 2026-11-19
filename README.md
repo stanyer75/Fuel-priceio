@@ -59,9 +59,9 @@ If anything is missing from your PHP, it **stops before installing anything and 
 
 openrouteservice handles finding places, planning the route, and measuring detours. It's run by [HeiGIT](https://heigit.org) at Heidelberg University and is free for this kind of use.
 
-1. Go to **[openrouteservice.org](https://openrouteservice.org)** and choose **Sign up**. Signup and the dashboard are now on HeiGIT's site; the old `openrouteservice.org/dev` link redirects there.
-2. Create an account and **confirm your email address** (check your spam folder).
-3. Log in to the dashboard at **[account.heigit.org](https://account.heigit.org)**. Your free (Standard) **API key** is shown there; copy it.
+1. Go to **[openrouteservice.org](https://openrouteservice.org)**, find the **Our API Services** section, and click **Public API**.
+2. **Sign up** for a free account and **confirm your email address** (check your spam folder).
+3. Once you're signed in, your free **API key** is shown on your dashboard; copy it. (You can find it again later at [account.heigit.org](https://account.heigit.org).)
 4. Open `.env` in the project folder and paste it in:
    ```dotenv
    ORS_API_KEY=paste-your-key-here
