@@ -6,10 +6,12 @@ It pairs two public APIs that were never designed to work together:
 
 | | Provides | Can't do on its own |
 |---|---|---|
-| **[UK Fuel Finder](https://www.gov.uk/guidance/access-the-latest-fuel-prices-and-forecourt-data-via-api-or-email)** (statutory open data scheme, live since Feb 2026) | Every forecourt's location and current prices | No routing, no "near me" search: bulk paginated dumps only, one request at a time |
+| **[CheckFuelPrices](https://checkfuelprices.co.uk/developers)** (free, no key; built on the government Fuel Finder feed) | Live UK forecourt prices **within a radius of a point** | Knows nothing about routes; max 20 results per query; no published rate limit |
 | **[openrouteservice](https://openrouteservice.org)** (HeiGIT, free plan) | Geocoding, driving routes, a road distance matrix | Knows nothing about fuel prices |
 
 The interesting part is the **seams** between them; they're listed [below](#the-seams), each linked to the code that handles it.
+
+> **Why not the official Fuel Finder API directly?** The integration is built (OAuth, batched sync, normaliser; see `PRICE_SOURCE=synced`), but the government's developer signup form was broken during this project, so no credentials could be obtained. The app switched to CheckFuelPrices, a free intermediary over the same data. Switching back is a one-line `.env` change.
 
 ---
 
@@ -22,7 +24,7 @@ git clone <this repo> fuel-detour && cd fuel-detour
 composer setup          # install, .env, SQLite database, migrations, load sample data
 ```
 
-Then add a **free openrouteservice key** (sign up at <https://openrouteservice.org/dev/#/signup>, about 2 minutes) to `.env`:
+Then add a **free openrouteservice key** (sign up at <https://openrouteservice.org/dev/#/signup>, about 2 minutes) to `.env`. It's the only credential needed; live UK prices need no key:
 
 ```dotenv
 ORS_API_KEY=your-key-here
@@ -32,15 +34,20 @@ ORS_API_KEY=your-key-here
 php artisan serve       # http://localhost:8000
 ```
 
-Open <http://localhost:8000/?from=Holyhead&to=Manchester&fuel=E10>.
+Open <http://localhost:8000/?from=Holyhead&to=Manchester&fuel=E10>. A first (uncached) search makes about 20–25 price requests and takes a few seconds; repeats are cached.
 
-### Sample data vs. live data
+### Price sources (`PRICE_SOURCE` in `.env`)
 
-Out of the box `FUEL_FINDER_DRIVER=fixture`, so **no Fuel Finder account is needed to review this**. The fixtures in [tests/Fixtures/fuel-finder](tests/Fixtures/fuel-finder) are **fictional "Demo Fuels" stations with made-up prices** along the real A55/M56 corridor. They're shaped exactly like real API responses and deliberately contain every data defect described below. The UI shows a "SAMPLE DATA" banner in this mode.
+| Value | What it uses | Needs |
+|---|---|---|
+| `checkfuelprices` (default) | Live UK prices, queried along each route | Nothing |
+| `synced` + `FUEL_FINDER_DRIVER=fixture` | **Fictional "Demo Fuels" sample data** in [tests/Fixtures/fuel-finder](tests/Fixtures/fuel-finder), shaped like real Fuel Finder responses and containing every known defect. Fully offline; shows a "SAMPLE DATA" banner | `php artisan fuel:sync` (already run by `composer setup`) |
+| `synced` + `FUEL_FINDER_DRIVER=live` | The official Fuel Finder API, bulk-synced to SQLite | Fuel Finder credentials (see below) |
 
-To use real prices, register at the [Fuel Finder developer portal](https://www.developer.fuel-finder.service.gov.uk/access-latest-fuelprices) (needs a GOV.UK One Login), then:
+For the official API, register at the [Fuel Finder developer portal](https://www.developer.fuel-finder.service.gov.uk/access-latest-fuelprices) (needs a GOV.UK One Login), then:
 
 ```dotenv
+PRICE_SOURCE=synced
 FUEL_FINDER_DRIVER=live
 FUEL_FINDER_CLIENT_ID=...
 FUEL_FINDER_CLIENT_SECRET=...
@@ -54,10 +61,10 @@ php artisan schedule:work    # keeps it fresh (stations hourly, prices every 15 
 ### Tests
 
 ```bash
-php artisan test             # 77 tests, ~2 seconds, fully offline
+php artisan test             # 90 tests, ~2 seconds, fully offline
 ```
 
-Every HTTP call is faked (`Http::preventStrayRequests()`), so tests never touch real APIs or quotas. `phpunit.xml` pins the fixture driver so a reviewer's `.env` can't leak in.
+Every HTTP call is faked (`Http::preventStrayRequests()`), so tests never touch real APIs or quotas. The fakes behave like the real services as probed (distance-sorted and capped at 20; 302 for bad parameters; 406 without the geo+json `Accept` header). `phpunit.xml` pins the sources so a reviewer's `.env` can't leak in.
 
 > **Windows notes** (both in the `php.ini` that `php --ini` reports as loaded, not the `-development`/`-production` templates):
 > - `could not find driver` → uncomment `extension=pdo_sqlite`.
@@ -68,22 +75,28 @@ Every HTTP call is faked (`Http::preventStrayRequests()`), so tests never touch 
 ## How it works
 
 ```
-                 every 15 min / hourly (scheduler)
- Fuel Finder ───────────────────────────────────────▶ local SQLite copy
-   (OAuth, 500/batch,          FuelDataSync            stations, prices,
-    1 request at a time)     + FuelFinderNormaliser    sync_runs (audit)
-                                                              │
- User: "Holyhead → Manchester"                                │
-   │                                                          ▼
-   ├─▶ ORS geocode ×2 (cached 7d) ─▶ ORS route (cached 24h) ─▶ CorridorSearch
-   │                                                          │  bbox in SQL, then exact
-   │                                                          │  point-to-polyline in PHP
-   │                                                          ▼
+ User: "Holyhead → Manchester"
+   │
+   ├─▶ ORS geocode ×2 (cached 7d) ─▶ ORS route (cached 24h) ─▶ StationSource
+   │                                                             │
+   │        PRICE_SOURCE=checkfuelprices (default)               │
+   │        cover the route with overlapping circles ◀───────────┤
+   │        ─▶ CheckFuelPrices radius search per circle          │
+   │           (cached 30 min; split circles that hit the        │
+   │            20-result cap; de-duplicate)                     │
+   │                                                             │
+   │        PRICE_SOURCE=synced                                  │
+   │        bbox query on local SQLite copy ◀────────────────────┘
+   │        (filled by fuel:sync from Fuel Finder or sample data)
+   │                         │
+   │                         ▼  CorridorFilter: within N miles, open, price not stale
    └─◀ verdict + table + map ◀── DetourCalculator ◀── ORS matrix ×1
-                     (whole result cached 5 min, invalidated by the next price sync)
+                     (whole result cached 5 min)
 ```
 
-A user's search **never calls Fuel Finder**. It costs at most 4 openrouteservice requests, and 0 when cached.
+An uncached search costs at most 4 openrouteservice requests plus one CheckFuelPrices request per uncached circle (about 22 for Holyhead → Manchester). A repeat costs nothing.
+
+**Covering a route with circles.** With a corridor of half-width *c*, a circle on the midpoint of a route window of length *L* covers the whole corridor for that window if its radius is *r = √((L/2)² + c²)*. We start with *r = 2c* (*L* ≈ 6.9 mi for *c* = 2 mi). When a circle returns the provider's maximum of 20 stations, it was truncated: results are distance-sorted, so cheaper stations further out are invisible. The window is then halved and searched again, down to 1 mile. See [CheckFuelPricesStationSource](app/Services/CheckFuelPrices/CheckFuelPricesStationSource.php).
 
 **"Is the detour worth it?"** For each station:
 *total cost = litres bought × price + (extra miles ÷ MPG × 4.54609 L/gal) × price*.
@@ -103,6 +116,21 @@ This is compared against the *convenient* station (the one needing the least det
 ---
 
 ## The seams
+
+### CheckFuelPrices (live prices) ([client](app/Services/CheckFuelPrices/CheckFuelPricesClient.php), [source](app/Services/CheckFuelPrices/CheckFuelPricesStationSource.php))
+| Seam | Handling |
+|---|---|
+| A route is a **line**; the price API only answers "within R miles of a **point**" | The route is covered with overlapping circles sized to the corridor (maths above) |
+| Results are **distance-sorted and capped at 20**: in a city, everything beyond ~2 miles is invisible (probed: 20 results all within 2.1 mi of central Manchester) | A full page counts as truncated, so the circle is split and searched again; unresolved truncation produces a user-visible "busy area" warning |
+| **No published rate limit**, no rate-limit headers, Cloudflare in front | Our own limits: 250 ms between requests, max 60/min app-wide, honour 429 + `Retry-After`, stop the search on rate limiting (rather than hammer). Measured with `php artisan prices:probe` (results below) |
+| Out-of-range parameters return a **302 redirect**, not a 400 | Redirects are disabled; any 3xx becomes a `request_rejected` error naming the parameters. Following it would have returned an HTML page with a 200 |
+| **Undocumented response** (the provider's REST API is "coming soon"; this endpoint powers its widget) | Strict shape validation: `success`, `stations` list, required fields. A drift or a Cloudflare HTML page fails loudly as `unexpected_response` |
+| **Two timestamp formats in one response**: `2026-11-18T23:05:15.000Z` and `18/11/2026 10:43:27` | Day-first parsed explicitly (a generic, US-order parser reads `05/11/2026` as 11 May, not 5 November) in **UK local time** (BST in summer), then converted to UTC |
+| Leftover prices from the closed CMA scheme (e.g. dated 29/04/2026) | Excluded by the 14-day age rule and counted (14 on the first live Holyhead → Manchester run) |
+| Inconsistent names (`TESCO`, `Jet`, `ASDA LLANDUDNO SUPERSTORE`), no motorway/closure flags | Display-cased; missing flags default to "unknown/false" |
+| Some circles fail | Partial results plus a warning saying how much of the route is missing; only a total failure is an error |
+| Attribution required by the provider's terms | "Prices from checkfuelprices.co.uk" shown with every result and returned in the JSON |
+| Overlapping circles return the same station | De-duplicated by provider id |
 
 ### Authentication
 | Seam | Handling |
@@ -162,13 +190,18 @@ This area changed a lot in 2026; this is what was confirmed against official doc
 
 **Verified by live calls (Nov 2026):** the `api.heigit.org` path layout above; geocode/directions/matrix response shapes; matrix quota **500/day** (`X-Ratelimit-Limit` header); the geo+json `Accept` requirement.
 
-**Unverified (community sources, configurable):** Fuel Finder endpoint paths and response shapes, the 1h token TTL, the 403 for non-UK IPs, and the 30/min figure. The ORS matrix per-request location limit (we send at most 27 locations).
+**CheckFuelPrices, verified by probe (19 Nov 2026):** no key; `radius` 1–50 mi (decimals OK); `limit` max 20; results distance-sorted; `fuel` codes `E10`, `E5`, `B7`, `SDV`; invalid parameters return 302. **Rate limit:** 60 uncached requests at 4/s (straight after a 22-request search) all returned 200 (median 133 ms, p95 167 ms), with no rate-limit headers. The real ceiling was deliberately not pushed further against a free service. Our own cap (60/min) stays well inside what was observed.
+
+**Unverified (community sources, configurable):** Fuel Finder endpoint paths and response shapes, the 1h token TTL, the 403 for non-UK IPs, and the 30/min figure. The ORS matrix per-request location limit (we send at most 27 locations). CheckFuelPrices' actual rate limit and update frequency (it claims about 30 minutes).
 
 All tunables and assumptions live in one file: [config/fueldetour.php](config/fueldetour.php).
 
-## Known limitations
+## Known limitations & risks
 
-- Opening hours are stored but not yet used ("is it open when I arrive?").
+- **CheckFuelPrices is a small third-party service**, and the endpoint used is undocumented (it powers their widget). It could change or disappear without notice; there's no uptime guarantee. Mitigations: strict validation, partial-failure handling, and the `synced` sources as a fallback.
+- In very dense areas (central Manchester), even 1-mile circles can hit the 20-result cap; the UI warns when this happens.
+- Only the 25 most useful corridor stations get exact road detours (to protect the ORS matrix quota of 500/day); the rest are counted as "not checked".
+- Opening hours are stored (synced source) but not yet used ("is it open when I arrive?").
 - Stations that disappear from the feed are not deleted; that would be unsafe after a partial sync.
 - A longitude sign error east of ~1.8°W still lands inside the UK and can't be detected.
 - Detour fuel is priced at the destination station; MPG is a single number, not speed-dependent.
@@ -177,10 +210,12 @@ All tunables and assumptions live in one file: [config/fueldetour.php](config/fu
 ## Project layout
 
 ```
+app/Services/CheckFuelPrices/  Client (HTTP + politeness), StationSource (route circles), Normaliser
+app/Services/Prices/       StationSource interface, CorridorFilter (shared rules), SyncedStationSource
 app/Services/FuelFinder/   FuelFinderClient (HTTP), FixtureFuelFinderSource, FuelFinderNormaliser, FuelDataSync
 app/Services/Routing/      OpenRouteServiceClient, Place, RoutingException
-app/Services/Journey/      JourneyPlanner (orchestration), CorridorSearch, DetourCalculator
-app/Console/Commands/      fuel:sync, fuel:sync-stations, fuel:sync-prices [--full]
+app/Services/Journey/      JourneyPlanner (orchestration), DetourCalculator
+app/Console/Commands/      fuel:sync, fuel:sync-stations, fuel:sync-prices [--full], prices:probe
 routes/console.php         schedule
 config/fueldetour.php      every tunable and API assumption
 tests/                     Unit (normaliser, geometry, cost maths), Feature (client, sync, end-to-end)

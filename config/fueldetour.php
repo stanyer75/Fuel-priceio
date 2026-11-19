@@ -16,6 +16,59 @@ return [
 
     /*
     |----------------------------------------------------------------------
+    | Where station prices come from
+    |----------------------------------------------------------------------
+    |
+    | "checkfuelprices": live, on-demand radius queries along the route to
+    |                    CheckFuelPrices (free, no key). Default.
+    | "synced":          our local copy, filled by `php artisan fuel:sync`
+    |                    from Fuel Finder (FUEL_FINDER_DRIVER=live) or the
+    |                    bundled sample data (FUEL_FINDER_DRIVER=fixture).
+    */
+    'price_source' => env('PRICE_SOURCE', 'checkfuelprices'),
+
+    /*
+    |----------------------------------------------------------------------
+    | CheckFuelPrices (https://checkfuelprices.co.uk/developers)
+    |----------------------------------------------------------------------
+    |
+    | Third-party UK API built on the government Fuel Finder feed. The
+    | stations endpoint is public but its response is undocumented, and NO
+    | RATE LIMIT IS PUBLISHED, so the politeness settings below are our own
+    | choice. Measure with: php artisan prices:probe
+    */
+    'checkfuelprices' => [
+        'base_url' => env('CFP_BASE_URL', 'https://checkfuelprices.co.uk'),
+        'stations_path' => '/api/widget/stations',
+        'user_agent' => 'FuelDetour/1.0 (API integration demo)',
+        'timeout_seconds' => 15,
+        'max_retries' => 2,
+
+        // VERIFIED by probe: results are distance-sorted; limit > 20 and
+        // radius outside 1-50 miles are rejected (with a 302 redirect).
+        'max_results' => 20,
+        'min_radius_miles' => 1.0,
+        'max_radius_miles' => 50.0,
+
+        // Their terms recommend caching responses for 30 minutes.
+        'cache_minutes' => 30,
+
+        // Our own limits, as none are published.
+        'min_request_interval_ms' => (int) env('CFP_MIN_INTERVAL_MS', 250),
+        'max_requests_per_minute' => (int) env('CFP_MAX_PER_MINUTE', 60),
+        'max_wait_seconds' => 10,
+
+        // Route coverage: circles are split when they hit the 20-result cap,
+        // down to this window length; a hard budget caps one search.
+        'min_window_miles' => 1.0,
+        'max_requests_per_search' => 60,
+
+        'attribution' => 'Prices from checkfuelprices.co.uk',
+        'attribution_url' => 'https://checkfuelprices.co.uk',
+    ],
+
+    /*
+    |----------------------------------------------------------------------
     | Fuel Finder (UK statutory fuel price open data scheme)
     |----------------------------------------------------------------------
     |

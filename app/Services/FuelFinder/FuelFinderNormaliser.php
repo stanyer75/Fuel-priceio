@@ -193,6 +193,9 @@ class FuelFinderNormaliser
      *  - API:  "2025-12-31T08:15:23" (no timezone; treated as UTC)
      *  - API query format / some fields: "2026-03-07 15:34:42"
      *  - CSV:  "Sat Mar 07 2026 15:34:42 GMT+0000 (Coordinated Universal Time)"
+     *  - CheckFuelPrices mixes ISO "2026-11-18T23:05:15.000Z" with UK-style
+     *    "18/11/2026 10:43:27" (day first, no zone: treated as UK local time,
+     *    so a summer timestamp is BST, not UTC) in the SAME response.
      */
     public function timestamp(mixed $value): ?CarbonImmutable
     {
@@ -206,6 +209,14 @@ class FuelFinderNormaliser
         try {
             if (preg_match('/^[A-Z][a-z]{2} [A-Z][a-z]{2} \d{2} \d{4} \d{2}:\d{2}:\d{2} GMT[+-]\d{4}$/', $value)) {
                 return CarbonImmutable::createFromFormat('D M d Y H:i:s \G\M\TO', $value)->utc();
+            }
+
+            // Day-first UK format. Must be handled explicitly: a generic
+            // parser reads "05/11/2026" as 11 May (US order).
+            if (preg_match('#^\d{2}/\d{2}/\d{4} \d{2}:\d{2}(:\d{2})?$#', $value)) {
+                $format = strlen($value) === 16 ? 'd/m/Y H:i' : 'd/m/Y H:i:s';
+
+                return CarbonImmutable::createFromFormat($format, $value, 'Europe/London')->utc();
             }
 
             return CarbonImmutable::parse($value, 'UTC')->utc();

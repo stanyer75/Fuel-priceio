@@ -122,6 +122,10 @@ class FuelFinderNormaliserTest extends TestCase
             'space separated' => ['2026-03-07 15:34:42', '2026-03-07 15:34:42'],
             'csv javascript style' => ['Sat Mar 07 2026 15:34:42 GMT+0000 (Coordinated Universal Time)', '2026-03-07 15:34:42'],
             'javascript style with offset' => ['Sat Mar 07 2026 16:34:42 GMT+0100 (British Summer Time)', '2026-03-07 15:34:42'],
+            'uk day-first, winter (GMT)' => ['18/11/2026 10:43:27', '2026-11-18 10:43:27'],
+            'uk day-first, summer (BST = UTC+1)' => ['15/07/2026 10:00:00', '2026-07-15 09:00:00'],
+            'uk day-first is not US month-first' => ['05/11/2026 08:00:00', '2026-11-05 08:00:00'],
+            'cfp iso with millis and Z' => ['2026-11-18T23:05:15.000Z', '2026-11-18 23:05:15'],
         ];
     }
 

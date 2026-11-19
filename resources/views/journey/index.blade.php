@@ -159,6 +159,12 @@
             </div>
         @endif
 
+        @if ($result['meta']['attribution'])
+            <p class="muted">
+                <a href="{{ $result['meta']['attribution']['url'] }}" rel="noopener">{{ $result['meta']['attribution']['text'] }}</a>
+            </p>
+        @endif
+
         <div class="card muted">
             @php($ex = array_filter($result['excluded']))
             @if ($ex)
@@ -174,8 +180,14 @@
             <ul class="compact">
                 @foreach ($result['assumptions']['notes'] as $note)<li>{{ $note }}</li>@endforeach
             </ul>
-            <strong>Data:</strong> source {{ $result['meta']['data_source'] }},
-            prices synced {{ $result['meta']['prices_synced_at'] ? \Carbon\Carbon::parse($result['meta']['prices_synced_at'])->diffForHumans() : 'never' }}
+            <strong>Data:</strong> source {{ $result['meta']['data_source'] }}
+            @if ($result['meta']['prices_synced_at'])
+                &middot; prices synced {{ \Carbon\Carbon::parse($result['meta']['prices_synced_at'])->diffForHumans() }}
+            @endif
+            @if ($result['meta']['coverage'])
+                &middot; {{ $result['meta']['coverage']['circles_searched'] }} search circles
+                ({{ $result['meta']['coverage']['http_requests'] }} live requests, {{ $result['meta']['coverage']['cache_hits'] }} cached)
+            @endif
             @if ($result['meta']['from_cache']) &middot; cached result @endif
             @if ($result['meta']['ors_quota_remaining'] !== null) &middot; routing quota left: {{ $result['meta']['ors_quota_remaining'] }} @endif
             &middot; <a href="{{ url('/api/journey').'?'.http_build_query($input) }}">JSON</a>

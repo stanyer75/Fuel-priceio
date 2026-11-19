@@ -3,32 +3,33 @@
 namespace App\Services\Journey;
 
 use App\Exceptions\UpstreamException;
-use App\Models\Station;
-use App\Models\SyncRun;
+use App\Services\Prices\StationSource;
 use App\Services\Routing\OpenRouteServiceClient;
 use App\Support\Geo;
 use Illuminate\Support\Facades\Cache;
 
 /**
- * Orchestrates one search: geocode -> route -> corridor -> matrix -> verdict.
+ * Orchestrates one search: geocode -> route -> stations near route ->
+ * matrix -> verdict.
  *
  * Request budget per (uncached) search:
  *   openrouteservice: 2 geocodes (cached 7d) + 1 route (cached 24h) + 1 matrix
- *   Fuel Finder:      0 (we read our synced copy)
+ *   prices:           CheckFuelPrices: one request per search circle (each
+ *                     cached 30 min); synced source: 0 (local database)
  */
 class JourneyPlanner
 {
     public function __construct(
         private readonly OpenRouteServiceClient $ors,
-        private readonly CorridorSearch $corridor,
+        private readonly StationSource $stations,
     ) {}
 
     public function plan(JourneyQuery $query): array
     {
-        // Cache invalidation: the key includes the id of the latest successful
-        // price sync, so new prices make every cached search obsolete at once.
-        $pricesVersion = SyncRun::lastSuccessfulPrices()?->id ?? 0;
-        $key = "journey:v{$pricesVersion}:".$query->cacheKey();
+        // Cache invalidation: the source supplies a version (for the synced
+        // source, the id of the latest successful price sync), so new prices
+        // make every cached search obsolete at once.
+        $key = 'journey:'.$this->stations->cacheVersion().':'.$query->cacheKey();
 
         $cached = Cache::get($key);
         if (is_array($cached)) {
@@ -47,11 +48,6 @@ class JourneyPlanner
     {
         $config = config('fueldetour.journey');
 
-        if (! Station::query()->exists()) {
-            throw new UpstreamException('app', 'no_data',
-                'No fuel station data has been synced yet. Run: php artisan fuel:sync', 503);
-        }
-
         $from = $this->ors->geocode($q->from);
         $to = $this->ors->geocode($q->to);
 
@@ -68,7 +64,7 @@ class JourneyPlanner
                 'That route is %d miles; this demo searches journeys up to %d miles.', $routeMiles, $config['max_route_miles']), 422);
         }
 
-        $found = $this->corridor->find($route['geometry'], $q->fuel, $q->corridorMiles);
+        $found = $this->stations->find($route['geometry'], $q->fuel, $q->corridorMiles);
         $excluded = $found['excluded'] + ['unroutable' => 0, 'not_checked_matrix_limit' => 0];
 
         [$selected, $excluded['not_checked_matrix_limit']] = $this->selectForMatrix($found['candidates']);
@@ -104,7 +100,7 @@ class JourneyPlanner
             'recommendation' => $recommendation,
             'stations' => $stations,
             'excluded' => $excluded,
-            'meta' => $this->meta(),
+            'meta' => $this->meta($found['meta']),
         ];
     }
 
@@ -281,26 +277,16 @@ class JourneyPlanner
             : sprintf('+%.1f miles, about +%d min', $row['detour_miles'], $row['detour_minutes']);
     }
 
-    private function meta(): array
+    /** Source-specific details (attribution, coverage, warnings) plus our own. */
+    private function meta(array $source): array
     {
-        $prices = SyncRun::lastSuccessfulPrices();
-        $stations = SyncRun::lastSuccessfulStations();
-        $source = config('fueldetour.fuel_finder.driver');
-        $warnings = [];
-
-        if ($source === 'fixture') {
-            $warnings[] = 'SAMPLE DATA: stations and prices are fictional fixtures, not real Fuel Finder data.';
-        }
-        if (! $prices || $prices->finished_at?->lt(now()->subHour())) {
-            $warnings[] = 'Prices have not synced successfully in the last hour; they may be out of date.';
-        }
-
         return [
-            'data_source' => $source,
-            'prices_synced_at' => $prices?->finished_at?->toIso8601String(),
-            'stations_synced_at' => $stations?->finished_at?->toIso8601String(),
+            'data_source' => $source['source'],
+            'attribution' => $source['attribution'] ?? null,
+            'warnings' => $source['warnings'] ?? [],
+            'coverage' => $source['coverage'] ?? null,
+            'prices_synced_at' => $source['prices_synced_at'] ?? null,
             'ors_quota_remaining' => $this->ors->quotaRemaining,
-            'warnings' => $warnings,
             'generated_at' => now()->toIso8601String(),
             'from_cache' => false,
         ];

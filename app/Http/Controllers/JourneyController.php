@@ -76,6 +76,7 @@ class JourneyController extends Controller
         ]);
 
         return response()->json([
+            'price_source' => config('fueldetour.price_source'),
             'data_source' => config('fueldetour.fuel_finder.driver'),
             'stations' => Station::count(),
             'prices' => StationPrice::count(),
